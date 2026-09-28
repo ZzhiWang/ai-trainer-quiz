@@ -2,3 +2,14 @@
 node_modules/
 _probe.html
 _visual.html
+
+# 原始题库与官方认定材料：只在本地保留，不随仓库发布
+题库/
+4-04-05-05_*/
+第九届全国职工职业技能大赛人工智能训练师*.md
+
+# 第三方题库导出（版权归原仓库）：只在本地保留，构建产物已含结果
+tools/sources/gz_l3_questions.json
+tools/sources/gz_l3_questions_new.json
+tools/sources/ww_l4_questions.json
+tools/sources/ai_trainer_l3_answers_xxiao.xlsx
