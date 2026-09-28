@@ -53,6 +53,21 @@
   </section>
 
   <section class="card">
+    <details id="secDetails">
+      <summary>
+        <span class="sum-title">章节</span>
+        <span class="sum-state" id="secState">全部章节</span>
+      </summary>
+      <p class="hint" style="margin-top:12px">按官方《认定要素细目表》划分，点章名可整章选中/取消。</p>
+      <div class="chips" id="secActions" style="margin-bottom:14px">
+        <button class="icon-btn" id="secAll">全选</button>
+        <button class="icon-btn" id="secNone">清空</button>
+      </div>
+      <div id="secGroups"></div>
+    </details>
+  </section>
+
+  <section class="card">
     <h2>出题模式</h2>
     <div class="chips" id="modeChips"></div>
   </section>

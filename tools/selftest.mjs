@@ -71,10 +71,39 @@ const l4 = Bank.filter({ levels: [4] });
 const single = Bank.filter({ types: ['single'] });
 const l3single = Bank.filter({ levels: [3], types: ['single'] });
 check('三级 ' + l3.length + ' 题', l3.every((q) => q.lv === 3) && l3.length === 1496);
-check('四级 ' + l4.length + ' 题', l4.every((q) => q.lv === 4) && l4.length === 758);
-check('只刷单选题 ' + single.length + ' 题', single.every((q) => q.type === 'single') && single.length === 1244);
+check('四级 ' + l4.length + ' 题', l4.every((q) => q.lv === 4) && l4.length === 750);
+check('只刷单选题 ' + single.length + ' 题', single.every((q) => q.type === 'single') && single.length === 1238);
 check('三级单选 ' + l3single.length + ' 题', l3single.every((q) => q.lv === 3 && q.type === 'single') && l3single.length === 738);
 check('三级+四级相加 = 总数', l3.length + l4.length === qs.length);
+
+console.log('\n[2b] 章节');
+check('每题都有章和节', qs.every((q) => q.ch && q.sec));
+const secs = Bank.sectionList();
+// 三级 9 节 + 四级 8 节，其中"基本要求/职业道德""基本要求/基础知识"两级同名，合并后 15 个
+check('章节数 = 15（三级9 + 四级8，2 节同名合并）', secs.length === 15, String(secs.length));
+check('同名章节能同时覆盖两级',
+  secs.some((s) => (s.lv[3] || 0) > 0 && (s.lv[4] || 0) > 0));
+check('章节题量之和 = 总题数',
+  secs.reduce((s, x) => s + x.total, 0) === qs.length,
+  String(secs.reduce((s, x) => s + x.total, 0)));
+check('每个章节都能筛出对应题目', secs.every((it) => {
+  const got = Bank.filter({ secs: [it.key] });
+  return got.length === it.total && got.every((q) => Bank.secKey(q) === it.key);
+}));
+const secL4 = Bank.filter({ levels: [4] });
+check('四级章节只含四级题', secs.filter((s) => (s.lv[4] || 0) > 0).every((it) =>
+  Bank.filter({ levels: [4], secs: [it.key] }).every((q) => q.lv === 4)));
+check('四级题量 = 四级各章节之和',
+  secL4.length === secs.reduce((s, x) => s + (x.lv[4] || 0), 0));
+const g3 = Bank.sectionGroups({ levels: [3], types: ['single'] });
+check('章节分组：三级 9 节 / 5 章', g3.reduce((s, g) => s + g.items.length, 0) === 9 && g3.length === 5,
+  g3.map((g) => g.ch).join(','));
+const oneSec = g3[0].items[0];
+check('章节分组计数与筛选一致',
+  oneSec.count === Bank.filter({ levels: [3], types: ['single'], secs: [oneSec.key] }).length);
+const onlySec = Bank.build({ mode: 'order', secs: [secs[0].key], count: 0 });
+check('按章节组卷只出该章节题', onlySec.length === secs[0].total &&
+  onlySec.every((id) => Bank.secKey(Bank.byId(id)) === secs[0].key));
 
 console.log('\n[3] 组卷模式');
 const order20 = Bank.build({ mode: 'order', count: 20 });

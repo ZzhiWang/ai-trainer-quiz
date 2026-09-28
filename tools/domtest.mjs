@@ -85,7 +85,7 @@ const click = (el) => el && el.dispatchEvent(new el.ownerDocument.defaultView.Mo
 console.log('\n[首页 index.html]');
 {
   const w = await run('index.html');
-  check('题库总数渲染为 2254', text(w, '#totalNum') === '2254', text(w, '#totalNum'));
+  check('题库总数渲染为 2246', text(w, '#totalNum') === '2246', text(w, '#totalNum'));
   check('级别按钮 2 个', qa(w, '#levelChips .chip').length === 2);
   check('题型按钮 3 个', qa(w, '#typeChips .chip').length === 3);
   check('模式按钮 6 个', qa(w, '#modeChips .chip').length === 6);
@@ -93,13 +93,38 @@ console.log('\n[首页 index.html]');
   check('开始按钮显示题量', /开始刷题（20 题）/.test(text(w, '#startBtn')), text(w, '#startBtn'));
   check('来源表有数据行', qa(w, '#srcTable tr').length >= 4);
 
+  // 章节区块
+  const groups = qa(w, '#secGroups .sec-group');
+  check('章节按章分组：8 组', groups.length === 8, String(groups.length));
+  check('章节按钮共 15 个', qa(w, '#secGroups .chip').length === 15, String(qa(w, '#secGroups .chip').length));
+  check('章节标题显示章名', /基本要求/.test(text(w, '#secGroups .sec-head')));
+  check('章内显示题量小计', /题/.test(text(w, '#secGroups .sec-count')));
+  check('默认全选章节', qa(w, '#secGroups .chip').every((b) => b.getAttribute('aria-pressed') === 'true'));
+  check('章节折叠块存在', !!q(w, '#secDetails'));
+  check('折叠标题显示全部章节', /全部章节（15 节）/.test(text(w, '#secState')), text(w, '#secState'));
+
+  // 清空 -> 只剩一个章节，题量随之下降
+  click(q(w, '#secNone'));
+  await tick();
+  const afterNone = qa(w, '#secGroups .chip').filter((b) => b.getAttribute('aria-pressed') === 'true');
+  check('清空后仅保留一个章节', afterNone.length === 1, String(afterNone.length));
+  const firstSecLabel = afterNone[0].textContent.replace(/\s+\d+ 题$/, '').trim();
+  click(afterNone[0]);
+  await tick();
+  check('取消唯一章节时的保护（仍剩一个）',
+    qa(w, '#secGroups .chip').filter((b) => b.getAttribute('aria-pressed') === 'true').length === 1);
+  check('折叠标题显示已选数量', /已选 1 \/ 15 节/.test(text(w, '#secState')), text(w, '#secState'));
+  click(q(w, '#secAll'));
+  await tick();
+  check('全选恢复所有章节', qa(w, '#secGroups .chip').every((b) => b.getAttribute('aria-pressed') === 'true'));
+
   // 只选单选题
   const typeChips = qa(w, '#typeChips .chip');
   click(typeChips[0]); // 取消判断题
   click(typeChips[2]); // 取消多选题
   await tick();
   check('只勾选单选题后，按钮仍是 20 题', /开始刷题（20 题）/.test(text(w, '#startBtn')), text(w, '#startBtn'));
-  check('池子提示显示筛选后的题量', /1244/.test(text(w, '#poolHint')), text(w, '#poolHint'));
+  check('池子提示显示筛选后的题量', /1238/.test(text(w, '#poolHint')), text(w, '#poolHint'));
 
   click(q(w, '#startBtn'));
   await tick();
@@ -121,7 +146,7 @@ console.log('\n[首页 index.html]');
   const w3 = await run('index.html');
   click(qa(w3, '#countChips .chip')[4]);
   await tick();
-  check('全部题量按钮文案正确', /2254/.test(text(w3, '#poolHint')), text(w3, '#poolHint'));
+  check('全部题量按钮文案正确', /2246/.test(text(w3, '#poolHint')), text(w3, '#poolHint'));
 }
 
 /* ============================================================ 答题页 */
@@ -148,6 +173,7 @@ console.log('\n[答题页 practice.html]');
   check('题号显示 1/3', /第 1 \/ 3 题/.test(text(w2, '#posText')), text(w2, '#posText'));
   check('显示级别与题型标签', /三级|四级/.test(text(w2, '#qmeta')) && /单选题/.test(text(w2, '#qmeta')));
   check('显示答案来源标签', qa(w2, '#qmeta .tag').length >= 3);
+  check('显示所属章节标签', /职业道德|基础知识|数据|智能|业务|培训/.test(text(w2, '#qmeta')));
 
   // 故意选错
   const wrongKey = Object.keys(q0.opts).find((k) => k !== q0.ans);

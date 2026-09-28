@@ -36,6 +36,51 @@ EXAM = {
     4: "题库/第5部分_人工智能训练师_4级_理论知识模拟试卷.docx",
 }
 
+# 官方《认定要素细目表》抽出的章/节/细目点结构（tools/extract_outline.py 生成）
+OUTLINE = {
+    3: os.path.join("tools", "sources", "outline_l3.json"),
+    4: os.path.join("tools", "sources", "outline_l4.json"),
+}
+
+# 原题库与细目点的对应关系：(级别, 题型) -> (原题库题数, 每个细目点几道题)
+POINT_MAP = {
+    (3, "judge"): (300, 1),
+    (3, "single"): (300, 1),
+    (3, "multi"): (300, 1),
+    (4, "judge"): (250, 1),
+    (4, "single"): (500, 2),
+}
+
+# 三级第三方题库自带的章标签
+TAG_CHAPTER = {
+    "ethics": "基本要求",
+    "basics": "基本要求",
+    "analysis": "业务分析",
+    "training": "智能训练",
+    "design": "智能系统设计",
+    "guide": "培训与指导",
+}
+
+# 把第三方题落到具体节用的关键词（只在已确定的章内部比较）
+SECTION_HINTS = {
+    "职业道德": ["职业道德", "职业守则", "敬业", "诚信", "道德", "伦理", "职业素养", "职业纪律"],
+    "基础知识": ["windows", "excel", "word", "ppt", "office", "浏览器", "快捷键", "输入法",
+                 "法律", "法规", "劳动合同", "专利", "知识产权", "著作权", "网络", "宏", "函数"],
+    "业务流程设计": ["流程设计", "数据采集", "采集流程", "数据源", "爬虫", "抓取", "存储", "采集工具"],
+    "业务模块效果优化": ["业务模块", "模块", "流程优化", "知识图谱", "业务分析", "响应速度",
+                         "智能控制", "推荐系统", "智能搜索", "智能交互", "知识表示"],
+    "数据处理规范制定": ["数据清洗", "标注", "缺失值", "异常值", "特征工程", "特征提取", "特征选择",
+                         "数据集", "预处理", "归一化", "白化", "数据去重", "数据增强", "数据分片"],
+    "算法测试": ["算法", "模型训练", "评估", "测试", "超参数", "过拟合", "欠拟合", "损失函数",
+                 "验证", "调优", "交叉验证", "指标"],
+    "智能系统监控和优化": ["监控", "性能", "优化", "拆解", "降维", "聚类", "网络分析", "时间序列",
+                           "数据融合", "统计分析", "安全性分析", "资源分配"],
+    "人机交互流程设计": ["人机交互", "交互", "界面", "用户体验", "原型", "需求分析", "可用性",
+                         "用户研究", "figma", "axure", "sketch", "adobe", "balsamiq", "marvel",
+                         "设计原则", "触摸", "语音交互", "增强现实", "虚拟现实"],
+    "培训与指导": ["培训", "指导", "教学", "讲义", "实训"],
+}
+
 TYPE_LABEL = {"judge": "判断题", "single": "单选题", "multi": "多选题"}
 TYPE_ORDER = {"judge": 0, "single": 1, "multi": 2}
 
@@ -339,13 +384,14 @@ def build():
     unexplained = []
     stats = Counter()
 
-    def add(level, kind, stem, opts, sources, exp="", tag="", extra_id=None):
+    def add(level, kind, stem, opts, sources, exp="", tag="", extra_id=None, spot=None):
         key = (level, kind, norm(stem))
         if key in seen:
             return None
         seen[key] = True
         stem = clean_stem(stem)
         tag = clean_tag(tag)
+        ch, sec = spot if spot else ("", "")
 
         qid = extra_id or "L%d-%s-%04d" % (level, {"judge": "J", "single": "S", "multi": "M"}[kind], len(questions) + 1)
 
@@ -388,6 +434,8 @@ def build():
             "id": qid,
             "lv": level,
             "type": kind,
+            "ch": ch,
+            "sec": sec,
             "stem": stem,
             "opts": opts,
             "ans": answer,
@@ -404,11 +452,51 @@ def build():
                 return {"official": "official", "bank": "bank", "gz": "gz", "ww": "ww"}.get(name, name)
         return "bank"
 
+    outlines = {lv: load_json(os.path.join(ROOT, rel)) for lv, rel in OUTLINE.items()}
+
+    def spot_for(level, kind, index):
+        """原题库按题号顺序对应官方细目点。"""
+        cfg = POINT_MAP.get((level, kind))
+        if not cfg:
+            return ("", "")
+        n_doc, per_point = cfg
+        if index >= n_doc:
+            return ("", "")
+        pi = index // per_point
+        pts = outlines[level]
+        if pi >= len(pts):
+            return ("", "")
+        return (pts[pi]["ch"], pts[pi]["sec"])
+
+    def spot_for_third_party(level, raw_tag, stem, opts):
+        """第三方题：先由自带标签定章，再用关键词落到节。"""
+        ch = TAG_CHAPTER.get((raw_tag or "").strip())
+        if not ch:
+            return ("", "")
+        text = (stem + " " + " ".join(opts.values())).lower()
+        best, best_n = "", 0
+        for sec_name, words in SECTION_HINTS.items():
+            if not any(pts["ch"] == ch and pts["sec"] == sec_name for pts in outlines[level]):
+                continue
+            n = sum(text.count(w) for w in words)
+            if n > best_n:
+                best, best_n = sec_name, n
+        if not best:
+            # 章内没有明显关键词，退回该章第一个节
+            for pts in outlines[level]:
+                if pts["ch"] == ch:
+                    best = pts["sec"]
+                    break
+        return (ch, best)
+
     # 1) 官方复习题
     for level, rel in DOCX.items():
         path = os.path.join(ROOT, rel)
+        counter = Counter()
         for q in parse_bank_docx(path):
             kind, stem, opts = q["type"], q["stem"], q["opts"]
+            index = counter[kind]
+            counter[kind] += 1
             key = norm(stem)
             sources = []
             if (level, kind, key) in official:
@@ -426,22 +514,16 @@ def build():
             else:
                 if (kind, key) in ww_ans:
                     sources.append(("ww", ww_ans[(kind, key)]))
-            exp, tag = "", ""
-            if level == 3:
-                gz_map = {norm(s): (e, t) for s, e, t in []}
-            add(level, kind, stem, opts, sources)
+            add(level, kind, stem, opts, sources, spot=spot_for(level, kind, index))
 
-    # 2) 第三方新增题（三级模拟卷 610 题）
+    # 2) 第三方新增题（三级模拟卷）
     for item in gz_new:
+        spot = spot_for_third_party(3, item["tag"], item["stem"], item["opts"])
         add(3, item["type"], item["stem"], item["opts"], [(item["src"], item["answer"])],
-            exp=item["exp"], tag=item["tag"])
+            exp=item["exp"], tag=item["tag"], spot=spot)
 
-    # 3) 第三方新增题（四级剩余）
-    for item in ww_all:
-        if (4, item["type"], norm(item["stem"])) in seen:
-            continue
-        add(4, item["type"], item["stem"], item["opts"], [(item["src"], item["answer"])],
-            exp=item["exp"], tag=item["tag"])
+    # 说明：第三方四级补充题与本地题库高度重复且部分解析损坏（题干里混入了答案和后续题目），
+    # 已在 tools/review/ 中核对后剔除，不再并入。
 
     return questions, conflicts, unexplained, stats
 

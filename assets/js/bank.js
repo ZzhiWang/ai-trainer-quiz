@@ -36,9 +36,52 @@ window.Bank = (function () {
     f = f || {};
     var levels = f.levels && f.levels.length ? f.levels : [3, 4];
     var types = f.types && f.types.length ? f.types : ['judge', 'single', 'multi'];
+    var secs = f.secs && f.secs.length ? f.secs : null;
     return all().filter(function (q) {
-      return levels.indexOf(q.lv) >= 0 && types.indexOf(q.type) >= 0;
+      if (levels.indexOf(q.lv) < 0 || types.indexOf(q.type) < 0) return false;
+      if (secs && secs.indexOf(secKey(q)) < 0) return false;
+      return true;
     });
+  }
+
+  function secKey(q) { return q.ch + '::' + q.sec; }
+
+  /* 章节列表（按题库里的官方顺序，章内按节顺序） */
+  function sectionList(levels) {
+    levels = levels && levels.length ? levels : [3, 4];
+    var seen = {};
+    var list = [];
+    all().forEach(function (q) {
+      if (!q.ch || levels.indexOf(q.lv) < 0) return;
+      var key = secKey(q);
+      var item = seen[key];
+      if (!item) {
+        item = seen[key] = { key: key, ch: q.ch, sec: q.sec, lv: {}, total: 0 };
+        list.push(item);
+      }
+      item.total += 1;
+      item.lv[q.lv] = (item.lv[q.lv] || 0) + 1;
+    });
+    return list;
+  }
+
+  /* 按章分组的章节列表，附带当前筛选条件下的题量 */
+  function sectionGroups(f) {
+    var list = sectionList(f.levels);
+    var groups = [];
+    var index = {};
+    list.forEach(function (item) {
+      var g = index[item.ch];
+      if (!g) {
+        g = index[item.ch] = { ch: item.ch, items: [] };
+        groups.push(g);
+      }
+      item.count = filter({
+        levels: f.levels, types: f.types, secs: [item.key]
+      }).length;
+      g.items.push(item);
+    });
+    return groups;
   }
 
   function countBy(f) {
@@ -109,6 +152,9 @@ window.Bank = (function () {
     filter: filter,
     countBy: countBy,
     build: build,
+    secKey: secKey,
+    sectionList: sectionList,
+    sectionGroups: sectionGroups,
     MODES: MODES
   };
 })();

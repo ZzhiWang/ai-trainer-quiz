@@ -12,6 +12,7 @@
   var state = {
     levels: [3, 4],
     types: ['judge', 'single', 'multi'],
+    secs: [],          // 空数组 = 全选
     mode: 'order',
     count: 20
   };
@@ -77,6 +78,80 @@
       });
       box.appendChild(b);
     });
+  }
+
+  /* 章节：按章分组，点章名整章切换 */
+  function renderSections() {
+    var box = document.getElementById('secGroups');
+    box.innerHTML = '';
+    var groups = Bank.sectionGroups({ levels: state.levels, types: state.types });
+    var allKeys = [];
+    groups.forEach(function (g) { g.items.forEach(function (it) { allKeys.push(it.key); }); });
+
+    // 选了新级别后，把已经不存在（或还没选）的章节补进来
+    if (!state.secs.length) {
+      state.secs = allKeys.slice();
+    } else {
+      state.secs = state.secs.filter(function (k) { return allKeys.indexOf(k) >= 0; });
+      if (!state.secs.length) state.secs = allKeys.slice();
+    }
+
+    groups.forEach(function (g) {
+      var wrap = document.createElement('div');
+      wrap.className = 'sec-group';
+
+      var keys = g.items.map(function (it) { return it.key; });
+      var selected = keys.filter(function (k) { return state.secs.indexOf(k) >= 0; });
+      var count = g.items.reduce(function (s, it) { return s + it.count; }, 0);
+
+      var head = document.createElement('div');
+      head.className = 'sec-head';
+      head.innerHTML = '<span>' + UI.esc(g.ch) + '</span>';
+      var toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.textContent = selected.length === keys.length ? '取消整章' : '选中整章';
+      toggle.addEventListener('click', function () {
+        if (selected.length === keys.length) {
+          state.secs = state.secs.filter(function (k) { return keys.indexOf(k) < 0; });
+        } else {
+          keys.forEach(function (k) { if (state.secs.indexOf(k) < 0) state.secs.push(k); });
+        }
+        renderAll();
+      });
+      head.appendChild(toggle);
+      var c = document.createElement('span');
+      c.className = 'sec-count';
+      c.textContent = count + ' 题';
+      head.appendChild(c);
+      wrap.appendChild(head);
+
+      var chips = document.createElement('div');
+      chips.className = 'chips';
+      g.items.forEach(function (it) {
+        var b = chip(it.sec, state.secs.indexOf(it.key) >= 0, it.count + ' 题');
+        if (!it.count) b.classList.add('dim');
+        b.addEventListener('click', function () {
+          var i = state.secs.indexOf(it.key);
+          if (i >= 0) {
+            if (state.secs.length > 1) state.secs.splice(i, 1);
+          } else {
+            state.secs.push(it.key);
+          }
+          renderAll();
+        });
+        chips.appendChild(b);
+      });
+      wrap.appendChild(chips);
+      box.appendChild(wrap);
+    });
+
+    // 折叠状态下也能看出当前选了多少章节
+    var stateEl = document.getElementById('secState');
+    if (stateEl) {
+      stateEl.textContent = state.secs.length >= allKeys.length
+        ? '全部章节（' + allKeys.length + ' 节）'
+        : '已选 ' + state.secs.length + ' / ' + allKeys.length + ' 节';
+    }
   }
 
   function renderCountChips() {
@@ -155,6 +230,7 @@
   function renderAll() {
     renderLevelChips();
     renderTypeChips();
+    renderSections();
     renderModeChips();
     renderCountChips();
     renderPrefs();
@@ -189,6 +265,20 @@
         Store.saveSettings({ [k]: !s[k] });
         renderPrefs();
       });
+    });
+  }
+
+  function bindSections() {
+    document.getElementById('secAll').addEventListener('click', function () {
+      state.secs = [];
+      renderAll();
+    });
+    document.getElementById('secNone').addEventListener('click', function () {
+      // 至少保留一个章节，避免空池
+      var groups = Bank.sectionGroups({ levels: state.levels, types: state.types });
+      var first = groups[0] && groups[0].items[0];
+      state.secs = first ? [first.key] : [];
+      renderAll();
     });
   }
 
@@ -264,6 +354,7 @@
       renderSrcTable();
       renderResume();
       bindPrefs();
+      bindSections();
       bindData();
       document.getElementById('startBtn').addEventListener('click', start);
     }).catch(function (err) {

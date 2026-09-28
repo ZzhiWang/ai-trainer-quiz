@@ -118,10 +118,19 @@ HAND_CONFLICT = {
 
 
 def main():
-    with open(os.path.join(ROOT, "tools", "report_conflicts.json"), encoding="utf-8") as fh:
+    conflicts_path = os.path.join(ROOT, "tools", "report_conflicts.json")
+    with open(conflicts_path, encoding="utf-8") as fh:
         conflicts = json.load(fh)
 
+    path = os.path.join(ROOT, "tools", "overrides.json")
+    # 与已有裁定合并：build_bank 跑第二遍时冲突已被 overrides 消解，
+    # report_conflicts.json 会变空，此时必须保留上一轮已经裁定过的答案。
     overrides = {}
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as fh:
+            overrides = json.load(fh)
+    before = len(overrides)
+
     for qid, answer in HAND_MISSING.items():
         overrides[qid] = {"answer": answer, "src": "ai", "note": "AI filled"}
 
@@ -140,10 +149,9 @@ def main():
                 answer, note = bank, "judge/single conflict: keep the answer key"
             overrides[cid] = {"answer": answer, "src": "reviewed", "note": note}
 
-    path = os.path.join(ROOT, "tools", "overrides.json")
     with open(path, "w", encoding="utf-8") as fh:
         json.dump(overrides, fh, ensure_ascii=False, indent=1, sort_keys=True)
-    print("overrides.json entries: %d" % len(overrides))
+    print("overrides.json entries: %d (原有 %d，本次冲突 %d)" % (len(overrides), before, len(conflicts)))
 
 
 if __name__ == "__main__":

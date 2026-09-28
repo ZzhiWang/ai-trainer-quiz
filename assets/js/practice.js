@@ -32,10 +32,13 @@
     var types = list('type', ['judge', 'single', 'multi']).filter(function (t) {
       return ['judge', 'single', 'multi'].indexOf(t) >= 0;
     });
+    var v = UI.qs('sec');
+    var secs = v ? v.split(',').map(function (s) { return s.trim(); }).filter(Boolean) : [];
     var count = parseInt(UI.qs('count') || '0', 10) || 0;
     return {
       levels: levels.length ? levels : [3, 4],
       types: types.length ? types : ['judge', 'single', 'multi'],
+      secs: secs,
       mode: UI.qs('mode') || 'order',
       count: count
     };
@@ -51,7 +54,7 @@
       graded: {},
       optOrder: {},
       mode: filters.mode,
-      filters: { levels: filters.levels, types: filters.types },
+      filters: { levels: filters.levels, types: filters.types, secs: filters.secs || [] },
       startedAt: Date.now(),
       finished: false
     };
@@ -92,6 +95,7 @@
     el.qmeta.innerHTML =
       '<span class="tag lv' + q.lv + '">' + (q.lv === 3 ? '三级' : '四级') + '</span>' +
       '<span class="tag">' + UI.typeLabel(q.type) + '</span>' +
+      (q.sec ? '<span class="tag">' + UI.esc(q.sec) + '</span>' : '') +
       (q.tag ? '<span class="tag">' + UI.esc(q.tag) + '</span>' : '') +
       '<span class="tag ' + src.cls + '">' + src.label + '</span>';
 
@@ -439,8 +443,16 @@
       order: '顺序练习', random: '随机练习', weak: '智能优先',
       unseen: '只刷没做过的', wrong: '错题重刷', fav: '收藏重刷'
     };
-    var lv = (s.filters && s.filters.levels && s.filters.levels.length === 1)
-      ? (s.filters.levels[0] === 3 ? '三级' : '四级') : '三/四级';
+    var f = s.filters || {};
+    var lv = (f.levels && f.levels.length === 1)
+      ? (f.levels[0] === 3 ? '三级' : '四级') : '三/四级';
+    var secs = f.secs || [];
+    if (secs.length === 1) {
+      return secs[0].split('::')[1] + ' · ' + lv;
+    }
+    if (secs.length > 1 && secs.length <= 3) {
+      return (names[s.mode] || '刷题') + ' · ' + secs.map(function (k) { return k.split('::')[1]; }).join('/');
+    }
     return (names[s.mode] || '刷题') + ' · ' + lv;
   }
 

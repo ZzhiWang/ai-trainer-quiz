@@ -4,6 +4,7 @@
 
   var tab = 'wrong';
   var keyword = '';
+  var secFilter = '';
   var filter = { levels: [3, 4], types: ['judge', 'single', 'multi'] };
   var openIds = {};
 
@@ -17,6 +18,9 @@
     list = list.filter(function (q) {
       return filter.levels.indexOf(q.lv) >= 0 && filter.types.indexOf(q.type) >= 0;
     });
+    if (secFilter) {
+      list = list.filter(function (q) { return Bank.secKey(q) === secFilter; });
+    }
     if (keyword) {
       var kw = keyword.toLowerCase();
       list = list.filter(function (q) {
@@ -69,7 +73,33 @@
     });
   }
 
+  /* 章节下拉：只列出当前列表里真正出现过的章节 */
+  function renderSecSelect() {
+    var sel = $('secSelect');
+    var ids = tab === 'wrong' ? Store.wrongIds() : Store.favIds();
+    var seen = {};
+    var items = [];
+    ids.forEach(function (id) {
+      var q = Bank.byId(id);
+      if (!q || !q.ch) return;
+      var key = Bank.secKey(q);
+      if (seen[key]) return;
+      seen[key] = true;
+      items.push({ key: key, label: q.ch === q.sec ? q.ch : q.ch + ' / ' + q.sec });
+    });
+    sel.innerHTML = '<option value="">全部章节</option>';
+    items.forEach(function (it) {
+      var o = document.createElement('option');
+      o.value = it.key;
+      o.textContent = it.label;
+      sel.appendChild(o);
+    });
+    if (secFilter && !seen[secFilter]) secFilter = '';
+    sel.value = secFilter;
+  }
+
   function render() {
+    renderSecSelect();
     $('tabWrong').textContent = '错题本（' + Store.wrongIds().length + '）';
     $('tabFav').textContent = '收藏夹（' + Store.favIds().length + '）';
     $('tabWrong').setAttribute('aria-selected', tab === 'wrong' ? 'true' : 'false');
@@ -168,7 +198,12 @@
     Store.saveSession({
       ids: ids, idx: 0, picks: {}, graded: {}, optOrder: {},
       mode: tab === 'wrong' ? 'wrong' : 'fav',
-      filters: filter, startedAt: Date.now(), finished: false
+      filters: {
+        levels: filter.levels,
+        types: filter.types,
+        secs: secFilter ? [secFilter] : []
+      },
+      startedAt: Date.now(), finished: false
     });
     location.href = 'practice.html';
   }
@@ -184,6 +219,7 @@
       $('tabWrong').addEventListener('click', function () { tab = 'wrong'; render(); });
       $('tabFav').addEventListener('click', function () { tab = 'fav'; render(); });
       $('search').addEventListener('input', function (e) { keyword = e.target.value.trim(); render(); });
+      $('secSelect').addEventListener('change', function (e) { secFilter = e.target.value; render(); });
       $('practiceBtn').addEventListener('click', function () { startWith(); });
       $('clearBtn').addEventListener('click', function () {
         var label = tab === 'wrong' ? '错题本' : '收藏夹';
@@ -196,6 +232,7 @@
         render();
       });
       renderFilters();
+      renderSecSelect();
       render();
     }).catch(function (err) { UI.toast(err.message); });
   }
