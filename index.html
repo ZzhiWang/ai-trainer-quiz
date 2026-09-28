@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="人工智能训练师（三级/四级）理论知识刷题，支持随机/顺序/错题/收藏/按题型练习，免登录、可离线。">
+<title>人工智能训练师 理论刷题</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <h1>人工智能训练师 · 理论刷题</h1>
+    <span class="spacer"></span>
+    <button class="icon-btn ghost" data-theme-toggle title="切换深色模式">🌙</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="card hero">
+    <h1>选择你的刷题方式</h1>
+    <p>三级 + 四级 理论知识 · 共 <span class="big" id="totalNum">—</span> 题</p>
+    <div class="stat-row" id="statRow">
+      <div class="stat"><b>—</b><span>已做</span></div>
+      <div class="stat"><b>—</b><span>正确率</span></div>
+      <div class="stat"><b>—</b><span>错题</span></div>
+      <div class="stat"><b>—</b><span>收藏</span></div>
+    </div>
+  </section>
+
+  <div class="card" id="resumeCard" hidden>
+    <div class="btn-row">
+      <button class="icon-btn" id="resumeBtn" style="flex:2">继续上次练习</button>
+      <button class="icon-btn ghost" id="dropResumeBtn">放弃</button>
+    </div>
+    <p class="hint" id="resumeHint" style="margin:10px 0 0"></p>
+  </div>
+
+  <section class="card">
+    <h2>考试级别</h2>
+    <p class="hint">可多选，默认三、四级一起刷。</p>
+    <div class="chips" id="levelChips"></div>
+  </section>
+
+  <section class="card">
+    <h2>题型</h2>
+    <p class="hint">只想练单选题？只勾「单选题」即可。</p>
+    <div class="chips" id="typeChips"></div>
+  </section>
+
+  <section class="card">
+    <h2>出题模式</h2>
+    <div class="chips" id="modeChips"></div>
+  </section>
+
+  <section class="card">
+    <h2>每次题量</h2>
+    <div class="chips" id="countChips"></div>
+    <p class="hint" id="poolHint" style="margin:12px 0 0"></p>
+  </section>
+
+  <section class="card">
+    <h2>做题偏好</h2>
+    <div class="field" style="margin-bottom:0">
+      <div class="chips" id="prefChips">
+        <button class="chip" data-pref="instant" aria-pressed="true">选完立即判分</button>
+        <button class="chip" data-pref="showExp" aria-pressed="true">显示解析</button>
+        <button class="chip" data-pref="shuffleOpts" aria-pressed="false">打乱选项顺序</button>
+      </div>
+    </div>
+  </section>
+
+  <button class="btn-primary" id="startBtn" disabled>开始刷题</button>
+
+  <section class="card" style="margin-top:20px">
+    <h2>快捷入口</h2>
+    <div class="quick">
+      <button data-go="practice.html?mode=wrong"><b>错题本</b><span id="qWrong">—</span></button>
+      <button data-go="practice.html?mode=fav"><b>收藏夹</b><span id="qFav">—</span></button>
+      <button data-go="practice.html?mode=weak&amp;count=20"><b>快速 20 题</b><span>智能优先出题</span></button>
+      <button data-go="wrong.html"><b>错题详解</b><span>逐题查看</span></button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>数据说明</h2>
+    <p class="hint">题库来自本仓库 <code>题库/</code> 下的 4 个 Word 文件，并合并了 GitHub 上公开的同类题库。</p>
+    <table class="src-table" id="srcTable"></table>
+    <p class="hint" style="margin:12px 0 0">
+      答案标注为 <b>AI 生成</b> 的题目，说明该题在所有来源中都没有答案，由 AI 补答，仅供参考。
+      标注为 <b>已复核</b> 的题目，是多个来源答案冲突、经逐题裁定后的结果。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>数据管理</h2>
+    <p class="hint">进度只保存在本机浏览器里，不上传任何服务器。换设备或清理浏览器缓存前，建议先导出备份。</p>
+    <div class="btn-row">
+      <button class="icon-btn" id="exportBtn">导出备份</button>
+      <button class="icon-btn" id="importBtn">导入备份</button>
+      <button class="icon-btn" id="resetBtn">清空进度</button>
+    </div>
+    <input type="file" id="importFile" accept="application/json,.json" hidden>
+  </section>
+
+  <p class="foot-note">
+    题库版权归原始出题机构所有，本站仅用于个人学习练习。<br>
+    纯静态页面，可部署在 GitHub Pages，断网也能用。
+  </p>
+
+</div>
+
+<script src="assets/js/store.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/bank.js"></script>
+<script src="assets/js/home.js"></script>
+</body>
+</html>

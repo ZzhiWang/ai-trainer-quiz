@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>错题本 · 人工智能训练师</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="icon-btn ghost" onclick="location.href='index.html'">←</button>
+    <h1>错题本 / 收藏夹</h1>
+    <span class="spacer"></span>
+    <button class="icon-btn ghost" data-theme-toggle title="切换深色模式">🌙</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="tabs">
+    <button id="tabWrong" aria-selected="true">错题本（0）</button>
+    <button id="tabFav" aria-selected="false">收藏夹（0）</button>
+  </div>
+
+  <section class="card">
+    <div class="field">
+      <label class="title">关键词搜索</label>
+      <input id="search" type="search" placeholder="输入题干关键词，如：数据清洗"
+        style="width:100%;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg-soft);color:var(--text);font-size:15px;font-family:inherit">
+    </div>
+    <div class="field" style="margin-bottom:0">
+      <label class="title">筛选</label>
+      <div class="chips" id="filters"></div>
+    </div>
+  </section>
+
+  <div class="btn-row" style="margin:4px 0 14px">
+    <button class="icon-btn" id="practiceBtn">开始重刷（0 题）</button>
+    <button class="icon-btn ghost" id="clearBtn">清空列表</button>
+  </div>
+
+  <div class="list" id="list"></div>
+</div>
+
+<script src="assets/js/store.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/bank.js"></script>
+<script src="assets/js/wrong.js"></script>
+</body>
+</html>

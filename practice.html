@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>刷题 · 人工智能训练师</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="icon-btn ghost" id="backBtn" title="返回首页">←</button>
+    <h1 id="barTitle">刷题</h1>
+    <span class="spacer"></span>
+    <button class="icon-btn ghost" id="favBtn" title="收藏本题">☆</button>
+    <button class="icon-btn ghost" id="sheetBtn" title="答题卡">答题卡</button>
+  </div>
+</header>
+
+<div class="wrap" id="quizWrap">
+  <div class="quiz-head">
+    <span id="posText">—</span>
+    <span class="spacer" style="flex:1"></span>
+    <span id="accText"></span>
+    <span id="timerText">00:00</span>
+  </div>
+  <div class="progress"><i id="bar"></i></div>
+
+  <div class="card" id="qcard">
+    <div class="qmeta" id="qmeta"></div>
+    <div class="stem" id="stem"></div>
+    <div class="options" id="options"></div>
+    <div id="feedback"></div>
+  </div>
+</div>
+
+<div class="wrap" id="resultWrap" hidden>
+  <div class="card result">
+    <div class="score" id="scoreNum">0%</div>
+    <p class="hint" id="scoreText" style="margin-top:8px"></p>
+    <div class="kv">
+      <div><b id="rRight">0</b><span>答对</span></div>
+      <div><b id="rWrong">0</b><span>答错</span></div>
+      <div><b id="rTime">00:00</b><span>用时</span></div>
+    </div>
+    <div class="btn-row">
+      <button class="icon-btn" id="againWrong">重做错题</button>
+      <button class="icon-btn" id="againAll">再做一遍</button>
+      <button class="icon-btn ghost" id="goHome">返回首页</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>本次错题</h2>
+    <div class="list" id="wrongList"></div>
+  </div>
+</div>
+
+<div class="qfoot" id="qfoot">
+  <div class="qfoot-inner">
+    <button id="prevBtn">上一题</button>
+    <button id="submitBtn" class="primary" hidden>提交答案</button>
+    <button id="nextBtn" class="primary">下一题</button>
+  </div>
+</div>
+
+<div class="sheet" id="sheet">
+  <div class="sheet-body">
+    <h3>答题卡（点题号可跳转）</h3>
+    <div class="grid-nums" id="gridNums"></div>
+    <div style="margin-top:16px" class="btn-row">
+      <button class="icon-btn" id="finishBtn">交卷并查看成绩</button>
+      <button class="icon-btn ghost" id="closeSheet">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/store.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/bank.js"></script>
+<script src="assets/js/practice.js"></script>
+</body>
+</html>

@@ -1,0 +1,847 @@
+{
+ "L3-J-0008": {
+  "answer": "√",
+  "note": "self-regulatory code, no legal force",
+  "src": "reviewed"
+ },
+ "L3-J-0031": {
+  "answer": "√",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L3-J-0053": {
+  "answer": "×",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L3-J-0068": {
+  "answer": "√",
+  "note": "encryption protects confidentiality, not leakage events",
+  "src": "reviewed"
+ },
+ "L3-J-0117": {
+  "answer": "×",
+  "note": "numpy ndarray is homogeneous",
+  "src": "reviewed"
+ },
+ "L3-J-0125": {
+  "answer": "×",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L3-J-0135": {
+  "answer": "√",
+  "note": "hash table is the common dedup technique",
+  "src": "reviewed"
+ },
+ "L3-J-0140": {
+  "answer": "√",
+  "note": "traditional annotation is manual and costly",
+  "src": "reviewed"
+ },
+ "L3-J-0296": {
+  "answer": "√",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L3-J-0299": {
+  "answer": "√",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0617": {
+  "answer": "ABDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0628": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0643": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0647": {
+  "answer": "ABCE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0649": {
+  "answer": "ABD",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0652": {
+  "answer": "ABCE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0656": {
+  "answer": "ACD",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0661": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0662": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0665": {
+  "answer": "ABDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0668": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0669": {
+  "answer": "BCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0671": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0675": {
+  "answer": "ABD",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0676": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0678": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0679": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0695": {
+  "answer": "ACE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0697": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0698": {
+  "answer": "ABE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0700": {
+  "answer": "ABCD",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0709": {
+  "answer": "ABCE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0718": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0728": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0729": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0731": {
+  "answer": "BCD",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0734": {
+  "answer": "ACD",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0737": {
+  "answer": "AB",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0738": {
+  "answer": "BCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0741": {
+  "answer": "ABCD",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0744": {
+  "answer": "BDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0746": {
+  "answer": "BCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0750": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0754": {
+  "answer": "ACE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0755": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0757": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0771": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0772": {
+  "answer": "ABCD",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0783": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0786": {
+  "answer": "ABCE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0796": {
+  "answer": "ABC",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0805": {
+  "answer": "BCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0810": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0812": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0821": {
+  "answer": "ABE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0826": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0830": {
+  "answer": "ABCE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0831": {
+  "answer": "ABC",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0833": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0842": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0844": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0845": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0850": {
+  "answer": "ABDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0851": {
+  "answer": "BCD",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0852": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0862": {
+  "answer": "ABCE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0863": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0866": {
+  "answer": "BDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0875": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0879": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0882": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0885": {
+  "answer": "ABD",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0887": {
+  "answer": "ABCE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0894": {
+  "answer": "ABC",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0896": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-M-0897": {
+  "answer": "ABCDE",
+  "note": "multi conflict: follow the answer key",
+  "src": "reviewed"
+ },
+ "L3-S-0324": {
+  "answer": "D",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L3-S-0336": {
+  "answer": "C",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L3-S-0362": {
+  "answer": "D",
+  "note": "interpretability is a model property, not a data-source metric",
+  "src": "reviewed"
+ },
+ "L3-S-0384": {
+  "answer": "A",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L3-S-0388": {
+  "answer": "C",
+  "note": "computational intelligence core: neural, fuzzy, evolutionary",
+  "src": "reviewed"
+ },
+ "L3-S-0392": {
+  "answer": "A",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L3-S-0398": {
+  "answer": "C",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L3-S-0410": {
+  "answer": "C",
+  "note": "filter methods use variance/correlation thresholds",
+  "src": "reviewed"
+ },
+ "L3-S-0416": {
+  "answer": "D",
+  "note": "Keras high-level API suits fast prototyping",
+  "src": "reviewed"
+ },
+ "L3-S-0492": {
+  "answer": "D",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L3-S-0524": {
+  "answer": "B",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L3-S-0550": {
+  "answer": "D",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L3-S-0568": {
+  "answer": "B",
+  "note": "judge/single conflict: keep the answer key",
+  "src": "reviewed"
+ },
+ "L4-J-1013": {
+  "answer": "×",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-J-1014": {
+  "answer": "√",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-J-1077": {
+  "answer": "√",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-J-1078": {
+  "answer": "√",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1252": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1253": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1254": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1256": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1258": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1260": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1261": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1262": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1264": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1265": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1266": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1268": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1269": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1270": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1272": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1273": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1274": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1276": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1277": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1278": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1280": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1281": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1282": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1284": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1286": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1287": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1288": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1290": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1291": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1292": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1294": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1295": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1296": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1298": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1300": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1302": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1303": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1304": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1306": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1307": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1308": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1310": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1311": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1312": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1314": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1315": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1316": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1318": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1319": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1320": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1322": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1324": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1326": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1328": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1330": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1331": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1332": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1334": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1335": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1336": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1338": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1339": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1340": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1342": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1344": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1345": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1346": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1348": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1349": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1350": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1412": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1474": {
+  "answer": "D",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1475": {
+  "answer": "A",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1595": {
+  "answer": "C",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1596": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ },
+ "L4-S-1601": {
+  "answer": "B",
+  "note": "AI filled",
+  "src": "ai"
+ }
+}

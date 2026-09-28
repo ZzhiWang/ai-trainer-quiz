@@ -1,0 +1,277 @@
+/* 首页：筛选条件、题量预览、开始刷题 */
+(function () {
+  'use strict';
+
+  var TYPES = [
+    { key: 'judge', label: '判断题' },
+    { key: 'single', label: '单选题' },
+    { key: 'multi', label: '多选题' }
+  ];
+  var COUNTS = [10, 20, 50, 100, 0];
+
+  var state = {
+    levels: [3, 4],
+    types: ['judge', 'single', 'multi'],
+    mode: 'order',
+    count: 20
+  };
+
+  var meta = null;
+
+  function chip(label, active, extra) {
+    var b = document.createElement('button');
+    b.className = 'chip';
+    b.type = 'button';
+    b.setAttribute('aria-pressed', active ? 'true' : 'false');
+    b.innerHTML = label + (extra ? ' <small>' + extra + '</small>' : '');
+    return b;
+  }
+
+  function renderLevelChips() {
+    var box = document.getElementById('levelChips');
+    box.innerHTML = '';
+    var c = Bank.countBy({ types: state.types });
+    [3, 4].forEach(function (lv) {
+      var b = chip('人工智能训练师（' + (lv === 3 ? '三级' : '四级') + '）',
+        state.levels.indexOf(lv) >= 0, c[lv] + ' 题');
+      b.addEventListener('click', function () {
+        var i = state.levels.indexOf(lv);
+        if (i >= 0) { if (state.levels.length > 1) state.levels.splice(i, 1); }
+        else state.levels.push(lv);
+        state.levels.sort();
+        renderAll();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function renderTypeChips() {
+    var box = document.getElementById('typeChips');
+    box.innerHTML = '';
+    var c = Bank.countBy({ levels: state.levels });
+    TYPES.forEach(function (t) {
+      var b = chip(t.label, state.types.indexOf(t.key) >= 0, c[t.key] + ' 题');
+      b.addEventListener('click', function () {
+        var i = state.types.indexOf(t.key);
+        if (i >= 0) { if (state.types.length > 1) state.types.splice(i, 1); }
+        else state.types.push(t.key);
+        renderAll();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function renderModeChips() {
+    var box = document.getElementById('modeChips');
+    box.innerHTML = '';
+    var pool = Bank.countBy(state);
+    Bank.MODES.forEach(function (m) {
+      var extra = '';
+      if (m.key === 'wrong') extra = Store.wrongIds().length + ' 题';
+      if (m.key === 'fav') extra = Store.favIds().length + ' 题';
+      var b = chip(m.label, state.mode === m.key, m.key === 'order' || m.key === 'random' || m.key === 'weak' || m.key === 'unseen' ? pool.total + ' 题' : extra);
+      b.title = m.hint;
+      b.addEventListener('click', function () {
+        state.mode = m.key;
+        renderAll();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function renderCountChips() {
+    var box = document.getElementById('countChips');
+    box.innerHTML = '';
+    var pool = Bank.build(Object.assign({}, state, { count: 0, mode: state.mode === 'wrong' || state.mode === 'fav' ? state.mode : 'order' })).length;
+    COUNTS.forEach(function (n) {
+      var label = n === 0 ? '全部' : n + ' 题';
+      var b = chip(label, state.count === n, '');
+      b.addEventListener('click', function () { state.count = n; renderAll(); });
+      box.appendChild(b);
+    });
+    var hint = document.getElementById('poolHint');
+    var actual = state.count === 0 ? pool : Math.min(state.count, pool);
+    hint.textContent = pool === 0
+      ? '当前条件下没有题目，换个筛选条件试试。'
+      : '本次将出 ' + actual + ' 题（可选范围内共 ' + pool + ' 题）。';
+  }
+
+  function renderPrefs() {
+    var s = Store.settings();
+    document.querySelectorAll('#prefChips .chip').forEach(function (b) {
+      var k = b.getAttribute('data-pref');
+      b.setAttribute('aria-pressed', s[k] ? 'true' : 'false');
+    });
+  }
+
+  function renderStats() {
+    var total = Bank.all().length;
+    document.getElementById('totalNum').textContent = total;
+    var sum = Store.summary(total);
+    var cells = document.querySelectorAll('#statRow .stat');
+    cells[0].innerHTML = '<b>' + sum.answered + '</b><span>已做（' + sum.coverage + '%）</span>';
+    cells[1].innerHTML = '<b>' + sum.rate + '%</b><span>正确率</span>';
+    cells[2].innerHTML = '<b>' + sum.wrongCount + '</b><span>错题</span>';
+    cells[3].innerHTML = '<b>' + sum.favCount + '</b><span>收藏</span>';
+    document.getElementById('qWrong').textContent = sum.wrongCount + ' 题';
+    document.getElementById('qFav').textContent = sum.favCount + ' 题';
+  }
+
+  function renderSrcTable() {
+    var counts = (meta && meta.answerSources) || {};
+    var order = ['official', 'consensus', 'reviewed', 'gz', 'ww', 'ai'];
+    var names = {
+      official: '官方模拟卷答案',
+      consensus: '多来源一致',
+      reviewed: '人工复核裁定',
+      gz: '第三方题库答案',
+      ww: '第三方题库答案',
+      ai: 'AI 生成答案'
+    };
+    var rows = '';
+    var used = {};
+    order.forEach(function (k) {
+      if (!counts[k]) return;
+      var label = names[k] || k;
+      if (used[label]) { used[label] += counts[k]; return; }
+      used[label] = counts[k];
+    });
+    Object.keys(used).forEach(function (label) {
+      rows += '<tr><td>' + label + '</td><td>' + used[label] + ' 题</td></tr>';
+    });
+    document.getElementById('srcTable').innerHTML = rows;
+  }
+
+  function renderResume() {
+    var s = Store.session();
+    var card = document.getElementById('resumeCard');
+    if (!s || !s.ids || !s.ids.length || s.finished) { card.hidden = true; return; }
+    var done = Object.keys(s.picks || {}).length;
+    card.hidden = false;
+    document.getElementById('resumeHint').textContent =
+      '上次练习共 ' + s.ids.length + ' 题，已作答 ' + done + ' 题，进度 ' + (s.idx + 1) + '/' + s.ids.length + '。';
+  }
+
+  function renderAll() {
+    renderLevelChips();
+    renderTypeChips();
+    renderModeChips();
+    renderCountChips();
+    renderPrefs();
+    var pool = Bank.build(Object.assign({}, state, { count: 0 })).length;
+    document.getElementById('startBtn').disabled = pool === 0;
+    document.getElementById('startBtn').textContent = pool === 0
+      ? '当前条件下没有题目'
+      : '开始刷题（' + (state.count === 0 ? pool : Math.min(state.count, pool)) + ' 题）';
+  }
+
+  function start() {
+    var ids = Bank.build(state);
+    if (!ids.length) { UI.toast('当前条件下没有题目'); return; }
+    Store.saveSession({
+      ids: ids,
+      idx: 0,
+      picks: {},
+      mode: state.mode,
+      filters: { levels: state.levels, types: state.types },
+      startedAt: Date.now(),
+      finished: false
+    });
+    Store.saveLastFilters(state);
+    location.href = 'practice.html';
+  }
+
+  function bindPrefs() {
+    document.querySelectorAll('#prefChips .chip').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var k = b.getAttribute('data-pref');
+        var s = Store.settings();
+        Store.saveSettings({ [k]: !s[k] });
+        renderPrefs();
+      });
+    });
+  }
+
+  function bindData() {
+    document.getElementById('exportBtn').addEventListener('click', function () {
+      var blob = new Blob([JSON.stringify(Store.exportAll(), null, 2)], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = '刷题进度备份-' + new Date().toISOString().slice(0, 10) + '.json';
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 3000);
+      UI.toast('已导出备份文件');
+    });
+
+    document.getElementById('importBtn').addEventListener('click', function () {
+      document.getElementById('importFile').click();
+    });
+
+    document.getElementById('importFile').addEventListener('change', function (e) {
+      var f = e.target.files && e.target.files[0];
+      if (!f) return;
+      var fr = new FileReader();
+      fr.onload = function () {
+        try {
+          Store.importAll(JSON.parse(fr.result));
+          UI.toast('导入成功');
+          renderStats(); renderAll(); renderResume();
+        } catch (err) {
+          UI.toast('导入失败：' + err.message);
+        }
+      };
+      fr.readAsText(f);
+      e.target.value = '';
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', function () {
+      if (!confirm('确定要清空全部做题进度、错题本和收藏吗？此操作不可恢复。')) return;
+      Store.resetProgress();
+      UI.toast('已清空');
+      renderStats(); renderAll(); renderResume();
+    });
+
+    document.getElementById('resumeBtn').addEventListener('click', function () {
+      location.href = 'practice.html?resume=1';
+    });
+    document.getElementById('dropResumeBtn').addEventListener('click', function () {
+      Store.clearSession();
+      renderResume();
+      UI.toast('已放弃上次练习');
+    });
+
+    document.querySelectorAll('[data-go]').forEach(function (b) {
+      b.addEventListener('click', function () { location.href = b.getAttribute('data-go'); });
+    });
+  }
+
+  function boot() {
+    if (window.__homeBooted) return;
+    window.__homeBooted = true;
+    UI.applyTheme();
+    UI.bindThemeToggle();
+
+    Bank.load().then(function (data) {
+      meta = data.meta;
+      var last = Store.lastFilters();
+      if (last) {
+        state = Object.assign(state, last);
+        if (!state.levels || !state.levels.length) state.levels = [3, 4];
+        if (!state.types || !state.types.length) state.types = ['judge', 'single', 'multi'];
+      }
+      renderStats();
+      renderAll();
+      renderSrcTable();
+      renderResume();
+      bindPrefs();
+      bindData();
+      document.getElementById('startBtn').addEventListener('click', start);
+    }).catch(function (err) {
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('startBtn').textContent = '题库加载失败';
+      UI.toast(err.message);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', boot);
+})();
