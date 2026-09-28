@@ -401,14 +401,16 @@
     settings = Store.settings();
 
     Bank.load().then(function () {
-      var wantNew = UI.qs('mode') || UI.qs('type') || UI.qs('lv') || UI.qs('count');
+      var hasParams = !!(UI.qs('mode') || UI.qs('type') || UI.qs('lv') || UI.qs('count'));
       var saved = Store.session();
-      if (!wantNew && !UI.qs('resume') && saved && !saved.finished) {
+      if (saved && !saved.finished) {
         session = saved;
-      } else if (UI.qs('resume') && saved && !saved.finished) {
-        session = saved;
-      } else {
+      } else if (hasParams) {
         session = newSession(parseFilters());
+      } else {
+        // 没有参数也没有未完成的练习，回首页去选
+        location.href = 'index.html';
+        return;
       }
 
       if (!session || !session.ids || !session.ids.length) {
