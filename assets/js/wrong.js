@@ -11,8 +11,9 @@
   function $(id) { return document.getElementById(id); }
 
   function items() {
-    var ids = tab === 'wrong' ? Store.wrongIds() : Store.favIds();
-    var stats = Store.stats();
+    var ids = tab === 'wrong' ? Store.wrongIds()
+      : (tab === 'ess' ? Store.essWrongIds() : Store.favIds());
+    var stats = tab === 'ess' ? Store.essStats() : Store.stats();
     var list = ids.map(function (id) { return Bank.byId(id); }).filter(Boolean);
 
     list = list.filter(function (q) {
@@ -31,6 +32,7 @@
     // 错题按最近答错时间倒序
     var wmap = {};
     if (tab === 'wrong') Store.wrongIds().forEach(function (id) { wmap[id] = true; });
+    if (tab === 'ess') Store.essWrongIds().forEach(function (id) { wmap[id] = true; });
     list.sort(function (a, b) {
       var sa = stats[a.id] || { ts: 0 };
       var sb = stats[b.id] || { ts: 0 };
@@ -76,7 +78,8 @@
   /* 章节下拉：只列出当前列表里真正出现过的章节 */
   function renderSecSelect() {
     var sel = $('secSelect');
-    var ids = tab === 'wrong' ? Store.wrongIds() : Store.favIds();
+    var ids = tab === 'wrong' ? Store.wrongIds()
+      : (tab === 'ess' ? Store.essWrongIds() : Store.favIds());
     var seen = {};
     var items = [];
     ids.forEach(function (id) {
@@ -101,8 +104,10 @@
   function render() {
     renderSecSelect();
     $('tabWrong').textContent = '错题本（' + Store.wrongIds().length + '）';
+    $('tabEss').textContent = '精华错题（' + Store.essWrongIds().length + '）';
     $('tabFav').textContent = '收藏夹（' + Store.favIds().length + '）';
     $('tabWrong').setAttribute('aria-selected', tab === 'wrong' ? 'true' : 'false');
+    $('tabEss').setAttribute('aria-selected', tab === 'ess' ? 'true' : 'false');
     $('tabFav').setAttribute('aria-selected', tab === 'fav' ? 'true' : 'false');
 
     var list = items();
@@ -113,7 +118,9 @@
     box.innerHTML = '';
     if (!list.length) {
       box.innerHTML = '<div class="empty">' +
-        (tab === 'wrong' ? '还没有错题。去刷几道题吧。' : '还没有收藏题目。答题时点右上角 ☆ 收藏。') +
+        (tab === 'wrong' ? '还没有错题。去刷几道题吧。'
+          : (tab === 'ess' ? '精华题还没有错题。去精华题模块刷几道。'
+            : '还没有收藏题目。答题时点右上角 ☆ 收藏。')) +
         '</div>';
       return;
     }
@@ -121,7 +128,7 @@
     list.forEach(function (q) {
       var d = document.createElement('div');
       d.className = 'list-item';
-      var st = Store.stats()[q.id] || { r: 0, w: 0 };
+      var st = (tab === 'ess' ? Store.essStats() : Store.stats())[q.id] || { r: 0, w: 0 };
       var src = UI.srcInfo(q.src);
       var open = !!openIds[q.id];
 
@@ -167,7 +174,9 @@
         rm.textContent = tab === 'wrong' ? '从错题本移除' : '取消收藏';
         rm.addEventListener('click', function (e) {
           e.stopPropagation();
-          if (tab === 'wrong') Store.removeWrong(q.id); else Store.toggleFav(q.id);
+          if (tab === 'wrong') Store.removeWrong(q.id);
+          else if (tab === 'ess') Store.removeEssWrong(q.id);
+          else Store.toggleFav(q.id);
           UI.toast('已移除');
           render();
         });
@@ -195,16 +204,21 @@
     if (Array.isArray(filterFn)) ids = filterFn;
     else ids = items().map(function (q) { return q.id; });
     if (!ids.length) { UI.toast('列表为空'); return; }
-    Store.saveSession({
+    var isEss = tab === 'ess';
+    if (isEss) Store.saveSettings({ set: 'ess' });
+    var sess = {
       ids: ids, idx: 0, picks: {}, graded: {}, optOrder: {},
-      mode: tab === 'wrong' ? 'wrong' : 'fav',
+      set: isEss ? 'ess' : Bank.setKey(),
+      scope: isEss ? 'ess' : '',
+      mode: tab === 'wrong' ? 'wrong' : (isEss ? 'wrong' : 'fav'),
       filters: {
         levels: filter.levels,
         types: filter.types,
         secs: secFilter ? [secFilter] : []
       },
       startedAt: Date.now(), finished: false
-    });
+    };
+    if (isEss) Store.saveEssSession(sess); else Store.saveSession(sess);
     location.href = 'practice.html';
   }
 
@@ -213,20 +227,24 @@
     window.__wrongBooted = true;
     UI.applyTheme();
     UI.bindThemeToggle();
-    Bank.load().then(function () {
+    Bank.preloadAll().then(function () {
       var m = UI.qs('tab');
       if (m === 'fav') tab = 'fav';
+      if (m === 'ess') tab = 'ess';
       $('tabWrong').addEventListener('click', function () { tab = 'wrong'; render(); });
+      $('tabEss').addEventListener('click', function () { tab = 'ess'; render(); });
       $('tabFav').addEventListener('click', function () { tab = 'fav'; render(); });
       $('search').addEventListener('input', function (e) { keyword = e.target.value.trim(); render(); });
       $('secSelect').addEventListener('change', function (e) { secFilter = e.target.value; render(); });
       $('practiceBtn').addEventListener('click', function () { startWith(); });
       $('clearBtn').addEventListener('click', function () {
-        var label = tab === 'wrong' ? '错题本' : '收藏夹';
-        var n = tab === 'wrong' ? Store.wrongIds().length : Store.favIds().length;
+        var label = tab === 'wrong' ? '错题本' : (tab === 'ess' ? '精华错题本' : '收藏夹');
+        var n = tab === 'wrong' ? Store.wrongIds().length
+          : (tab === 'ess' ? Store.essWrongIds().length : Store.favIds().length);
         if (!n) { UI.toast(label + '已经是空的'); return; }
         if (!confirm('确定清空' + label + '里的 ' + n + ' 道题吗？')) return;
         if (tab === 'wrong') Store.clearWrong();
+        else if (tab === 'ess') Store.clearEssWrong();
         else Store.favIds().forEach(function (id) { Store.toggleFav(id); });
         UI.toast('已清空');
         render();

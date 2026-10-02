@@ -7,9 +7,14 @@ _visual.html
 题库/
 4-04-05-05_*/
 第九届全国职工职业技能大赛人工智能训练师*.md
+*考试说明*
+备考资料/
 
 # 第三方题库导出（版权归原仓库）：只在本地保留，构建产物已含结果
 tools/sources/gz_l3_questions.json
 tools/sources/gz_l3_questions_new.json
 tools/sources/ww_l4_questions.json
 tools/sources/ai_trainer_l3_answers_xxiao.xlsx
+tools/sources/n9_raw_questions.json
+tools/gen/
+tools/gen_lv/

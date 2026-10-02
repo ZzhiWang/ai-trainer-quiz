@@ -1,12 +1,14 @@
 # 人工智能训练师 · 理论刷题
 
-一个**纯静态**的手机 / 电脑刷题网站，覆盖人工智能训练师**三级 + 四级**理论知识，共 **2246 道**题，按官方《认定要素细目表》分成 15 个章节。
+一个**纯静态**的手机 / 电脑刷题网站，覆盖人工智能训练师**三级 + 四级**理论知识，共 **2246 道**题，按官方《认定要素细目表》分成 15 个章节；另新增**第九届全国职工职业技能大赛理论题库（4423 题）**与 **1000 题精华题模块**两个分区。
 不需要登录、不需要后端、不用数据库，可以直接部署在 **GitHub Pages** 上，断网也能用。
 
 ![题型](https://img.shields.io/badge/题量-2246-blue) ![章节](https://img.shields.io/badge/章节-15个-orange) ![部署](https://img.shields.io/badge/部署-GitHub%20Pages-brightgreen) ![依赖](https://img.shields.io/badge/依赖-零构建-lightgrey)
 
 ## 功能
 
+- **题库分区**：等级认定题库（三级/四级，2246 题）｜大赛理论题库（第九届公开题库，4423 题）｜精华题（1000 题）。默认仍是等级认定题库，原有进度与统计不受影响
+- **精华题模块**：从两个题库里按考纲筛选的 1000 题（单选 600 / 判断 250 / 多选 150），按 9 个理论知识域分组，进度与错题本独立存储（同时双写全库统计）
 - **多种出题模式**：顺序练习、随机练习、智能优先（错题 → 没做过 → 做过）、只刷没做过的、只刷错题、只刷收藏
 - **章节刷题**：按官方细目表分 15 个章节，可以整章刷，也可以只刷某个小节
 - **按题型刷题**：只勾「单选题」就能进入纯单选模式；也可以只刷判断题、多选题
@@ -33,6 +35,36 @@ python3 -m http.server 8000
 ```
 
 或者 `npx serve .`、VS Code 的 Live Server 都行。
+
+## 题库分区与数据文件
+
+| 分区 | 数据文件 | 题量 | 说明 |
+| --- | --- | --- | --- |
+| 等级认定题库（默认） | `data/questions.json` | 2246 | 三级 1496 + 四级 750，按官方《认定要素细目表》分 15 章 |
+| 大赛理论题库 | `data/questions-n9.json` | 4423 | 第九届全国职工职业技能大赛公开理论题库，按 9 个理论知识域归类 |
+| 精华题 | `data/essence.json` | 1000 | 只存 id 列表与分组，题目本体仍来自上面两个文件 |
+
+进度存储（浏览器 localStorage，键名固定，升级不会丢数据）：
+
+| 键 | 用途 |
+| --- | --- |
+| `qz.stats.v1` / `qz.wrong.v1` / `qz.fav.v1` / `qz.session.v1` | 全库作答统计 / 错题本 / 收藏夹 / 当前练习 |
+| `qz.ess.stats.v1` / `qz.ess.wrong.v1` / `qz.ess.session.v1` | **精华题模块独立进度**（作答时同时写入全库统计） |
+
+新增分区与题目只做加法：老题目 id 不变、旧键不迁移，老用户升级后统计数字保持原样。
+
+### 题库构建脚本
+
+```bash
+python3 tools/build_bank.py      # 生成 data/questions.json（等级认定题库）
+python3 tools/build_n9.py        # 生成 data/questions-n9.json（第九届大赛题库）
+python3 tools/build_essence.py   # 生成 data/essence.json（1000 题精华清单）
+python3 tools/fill_exp.py        # 把 tools/gen/*.jsonl 里的 AI 解析合并进大赛题库
+node tools/selftest.mjs          # 逻辑自测
+node tools/domtest.mjs           # 真实 DOM 测试（需 jsdom）
+```
+
+> 大赛题库的解析由 AI 逐批生成，脚本幂等可续跑；覆盖进度见 `data/questions-n9.json` 的 `meta.explained`。
 
 ## 部署到 GitHub Pages
 

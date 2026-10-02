@@ -28,6 +28,43 @@
     return b;
   }
 
+  /* 题库分区切换（默认分区仍是原来的等级认定题库） */
+  function renderSetChips() {
+    var box = document.getElementById('setChips');
+    if (!box) return;
+    box.innerHTML = '';
+    var cur = Bank.setKey();
+    Bank.SETS.forEach(function (s) {
+      var b = chip(s.title, cur === s.key, s.sub);
+      b.addEventListener('click', function () {
+        if (Bank.setKey() === s.key) return;
+        b.disabled = true;
+        Bank.useSet(s.key).then(function () {
+          Store.saveSettings({ set: s.key });
+          state.secs = [];            // 章节键在不同分区之间不通用，重置即可
+          state.mode = 'order';
+          meta = Bank.meta();
+          renderAll();
+          renderStats();
+          renderSrcTable();
+          renderResume();
+          UI.toast('已切换到「' + s.title + '」');
+        }).catch(function (e) {
+          UI.toast('题库加载失败：' + e.message);
+        }).then(function () {
+          b.disabled = false;
+        });
+      });
+      box.appendChild(b);
+    });
+    var hint = document.getElementById('setHint');
+    if (hint) {
+      var d = Bank.setDef(cur) || Bank.SETS[0];
+      hint.textContent = '当前：' + d.title + ' · ' + Bank.all().length + ' 题'
+        + (cur === 'ess' ? '（精华模式答题会同时记入精华错题本与全库统计）' : '');
+    }
+  }
+
   function renderLevelChips() {
     var box = document.getElementById('levelChips');
     box.innerHTML = '';
@@ -182,7 +219,14 @@
   function renderStats() {
     var total = Bank.all().length;
     document.getElementById('totalNum').textContent = total;
-    var sum = Store.summary(total);
+    var isEss = Bank.setKey() === 'ess';
+    var ids = Bank.all().map(function (q) { return q.id; });
+    var sum = isEss ? Store.essSummary(ids, total) : Store.summaryFor(ids, total);
+    var title = document.getElementById('setTitle');
+    if (title) {
+      var d = Bank.setDef() || Bank.SETS[0];
+      title.textContent = d.title + (d.key === '' ? '（三级 / 四级）' : '');
+    }
     var cells = document.querySelectorAll('#statRow .stat');
     cells[0].innerHTML = '<b>' + sum.answered + '</b><span>已做（' + sum.coverage + '%）</span>';
     cells[1].innerHTML = '<b>' + sum.rate + '%</b><span>正确率</span>';
@@ -194,13 +238,14 @@
 
   function renderSrcTable() {
     var counts = (meta && meta.answerSources) || {};
-    var order = ['official', 'consensus', 'reviewed', 'gz', 'ww', 'ai'];
+    var order = ['official', 'consensus', 'reviewed', 'gz', 'ww', 'n9', 'ai'];
     var names = {
       official: '官方模拟卷答案',
       consensus: '多来源一致',
       reviewed: '人工复核裁定',
       gz: '第三方题库答案',
       ww: '第三方题库答案',
+      n9: '大赛公开题库答案',
       ai: 'AI 生成答案'
     };
     var rows = '';
@@ -218,7 +263,7 @@
   }
 
   function renderResume() {
-    var s = Store.session();
+    var s = Bank.setKey() === 'ess' ? Store.essSession() : Store.session();
     var card = document.getElementById('resumeCard');
     if (!s || !s.ids || !s.ids.length || s.finished) { card.hidden = true; return; }
     var done = Object.keys(s.picks || {}).length;
@@ -228,6 +273,7 @@
   }
 
   function renderAll() {
+    renderSetChips();
     renderLevelChips();
     renderTypeChips();
     renderSections();
@@ -244,15 +290,19 @@
   function start() {
     var ids = Bank.build(state);
     if (!ids.length) { UI.toast('当前条件下没有题目'); return; }
-    Store.saveSession({
+    var isEss = Bank.setKey() === 'ess';
+    var sess = {
       ids: ids,
       idx: 0,
       picks: {},
       mode: state.mode,
       filters: { levels: state.levels, types: state.types },
+      set: Bank.setKey(),
+      scope: isEss ? 'ess' : '',
       startedAt: Date.now(),
       finished: false
-    });
+    };
+    if (isEss) Store.saveEssSession(sess); else Store.saveSession(sess);
     Store.saveLastFilters(state);
     location.href = 'practice.html';
   }
@@ -325,7 +375,7 @@
       location.href = 'practice.html?resume=1';
     });
     document.getElementById('dropResumeBtn').addEventListener('click', function () {
-      Store.clearSession();
+      if (Bank.setKey() === 'ess') Store.clearEssSession(); else Store.clearSession();
       renderResume();
       UI.toast('已放弃上次练习');
     });

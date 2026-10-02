@@ -9,6 +9,7 @@ window.UI = (function () {
     gz: { label: '题库答案', cls: 'src-referenced', note: '来自第三方题库答案，未经官方确认。' },
     ww: { label: '题库答案', cls: 'src-referenced', note: '来自第三方题库答案，未经官方确认。' },
     bank: { label: '题库答案', cls: 'src-referenced', note: '来自第三方题库答案，未经官方确认。' },
+    n9: { label: '大赛题库答案', cls: 'src-referenced', note: '来自第九届全国职工职业技能大赛公开理论题库，未经官方确认，请与官方资料核对。' },
     ai: { label: 'AI 生成', cls: 'src-ai', note: '此题的原始题库中没有答案，答案由 AI 生成，仅供参考。' }
   };
 

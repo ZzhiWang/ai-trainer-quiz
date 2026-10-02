@@ -23,13 +23,20 @@
 
   <section class="card hero">
     <h1>选择你的刷题方式</h1>
-    <p>三级 + 四级 理论知识 · 共 <span class="big" id="totalNum">—</span> 题</p>
+    <p><span id="setTitle">三级 + 四级 理论知识</span> · 共 <span class="big" id="totalNum">—</span> 题</p>
     <div class="stat-row" id="statRow">
       <div class="stat"><b>—</b><span>已做</span></div>
       <div class="stat"><b>—</b><span>正确率</span></div>
       <div class="stat"><b>—</b><span>错题</span></div>
       <div class="stat"><b>—</b><span>收藏</span></div>
     </div>
+  </section>
+
+  <section class="card">
+    <h2>题库分区</h2>
+    <p class="hint">默认是三级/四级等级认定题库，原有进度不受影响；大赛题库与精华题是新增内容。</p>
+    <div class="chips" id="setChips"></div>
+    <p class="hint" id="setHint" style="margin:10px 0 0"></p>
   </section>
 
   <div class="card" id="resumeCard" hidden>

@@ -278,6 +278,116 @@ console.log('\n[错题本 wrong.html]');
   check('重刷写入会话', !!sess && sess.ids.length === 1 && sess.mode === 'fav');
 }
 
+/* ============================================================ 分区 / 精华题 / 老数据兼容 */
+console.log('\n[题库分区与老数据兼容 index.html]');
+{
+  // 预置老用户缓存：升级后必须逐字节不变
+  const legacyStats = JSON.stringify({ 'L3-J-0001': { r: 3, w: 1, ts: 1700000000000 } });
+  const legacyWrong = JSON.stringify({ 'L4-S-1151': 1700000000000 });
+  const legacyFav = JSON.stringify({ 'L3-M-0601': 1700000000000 });
+  const legacySettings = JSON.stringify({ instant: true, showExp: true, shuffleOpts: false, theme: 'auto' });
+
+  const w = await run('index.html', (win) => {
+    win.localStorage.setItem('qz.stats.v1', legacyStats);
+    win.localStorage.setItem('qz.wrong.v1', legacyWrong);
+    win.localStorage.setItem('qz.fav.v1', legacyFav);
+    win.localStorage.setItem('qz.settings.v1', legacySettings);
+  });
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const setChips = () => qa(w, '#setChips .chip');
+
+  check('默认分区题量仍是 2246', text(w, '#totalNum') === '2246', text(w, '#totalNum'));
+  check('分区入口 3 个', setChips().length === 3, String(setChips().length));
+  check('老统计键升级后逐字节不变', w.localStorage.getItem('qz.stats.v1') === legacyStats);
+  check('老错题键升级后逐字节不变', w.localStorage.getItem('qz.wrong.v1') === legacyWrong);
+  check('老收藏键升级后逐字节不变', w.localStorage.getItem('qz.fav.v1') === legacyFav);
+  check('老设置键只新增了分区字段', JSON.parse(w.localStorage.getItem('qz.settings.v1')).instant === true);
+  check('升级未写入精华题进度键', w.localStorage.getItem('qz.ess.stats.v1') === null);
+
+  // 切到大赛理论题库
+  click(setChips()[1]);
+  await wait(200);
+  check('大赛题库题量 4423', text(w, '#totalNum') === '4423', text(w, '#totalNum'));
+  check('大赛题库按 9 个知识域分组', qa(w, '#secGroups .sec-group').length === 9,
+    String(qa(w, '#secGroups .sec-group').length));
+  check('切分区不影响老进度键', w.localStorage.getItem('qz.stats.v1') === legacyStats);
+  check('当前分区被记住', JSON.parse(w.localStorage.getItem('qz.settings.v1')).set === 'n9');
+
+  // 切到精华题
+  click(setChips()[2]);
+  await wait(250);
+  check('精华题量 1000', text(w, '#totalNum') === '1000', text(w, '#totalNum'));
+  check('精华题按 9 个知识域分组', qa(w, '#secGroups .sec-group').length === 9,
+    String(qa(w, '#secGroups .sec-group').length));
+  check('精华题不覆盖全库统计', w.localStorage.getItem('qz.stats.v1') === legacyStats);
+}
+
+console.log('\n[精华题会话与双写 practice.html]');
+{
+  const ess = JSON.parse(read('data/essence.json'));
+  const std = JSON.parse(read('data/questions.json')).questions;
+  const n9 = JSON.parse(read('data/questions-n9.json')).questions;
+  const byId = {};
+  std.concat(n9).forEach((x) => { byId[x.id] = x; });
+  const singleId = ess.ids.find((id) => byId[id] && byId[id].type === 'single');
+  const judgeId = ess.ids.find((id) => byId[id] && byId[id].type === 'judge');
+  const ids = [singleId, judgeId, ess.ids.find((id) => id !== singleId && id !== judgeId)];
+
+  const w = await run('practice.html', (win) => {
+    win.localStorage.setItem('qz.settings.v1', JSON.stringify({
+      instant: true, showExp: true, shuffleOpts: false, theme: 'auto', set: 'ess'
+    }));
+    win.localStorage.setItem('qz.ess.session.v1', JSON.stringify({
+      ids, idx: 0, picks: {}, graded: {}, optOrder: {},
+      mode: 'order', filters: { levels: [3, 4], types: ['judge', 'single', 'multi'] },
+      set: 'ess', scope: 'ess', startedAt: Date.now(), finished: false
+    }));
+  });
+
+  const q0 = w.Bank.byId(singleId);
+  check('精华会话可继续（题目解析成功）', !!q0 && text(w, '#stem') === q0.stem);
+  check('精华题显示统一考纲章节', /人工智能|数据|模型|标注|伦理|安全|环境/.test(text(w, '#qmeta')));
+
+  const wrongKey = Object.keys(q0.opts).find((k) => k !== q0.ans);
+  click(qa(w, '#options .opt').find((b) => b.dataset.key === wrongKey));
+  await tick();
+  check('精华模式写入精华统计', !!JSON.parse(w.localStorage.getItem('qz.ess.stats.v1') || '{}')[singleId]);
+  check('精华模式同时写入全库统计（双写）', !!JSON.parse(w.localStorage.getItem('qz.stats.v1'))[singleId]);
+  check('精华错进入精华错题本', !!JSON.parse(w.localStorage.getItem('qz.ess.wrong.v1') || '{}')[singleId]);
+  check('精华会话存在自己的键里', JSON.parse(w.localStorage.getItem('qz.ess.session.v1')).scope === 'ess');
+  check('不污染默认会话键', w.localStorage.getItem('qz.session.v1') === null);
+}
+console.log('\n[精华错题本 wrong.html]');
+{
+  const ess = JSON.parse(read('data/essence.json'));
+  const std = JSON.parse(read('data/questions.json')).questions;
+  const n9 = JSON.parse(read('data/questions-n9.json')).questions;
+  const byId = {};
+  std.concat(n9).forEach((x) => { byId[x.id] = x; });
+  const id = ess.ids.find((i) => byId[i] && byId[i].type === 'single');
+
+  const w = await run('wrong.html', (win) => {
+    win.localStorage.setItem('qz.ess.wrong.v1', JSON.stringify({ [id]: Date.now() }));
+    win.localStorage.setItem('qz.ess.stats.v1', JSON.stringify({ [id]: { r: 0, w: 2, ts: Date.now() } }));
+  });
+
+  check('错题本有三个标签页', qa(w, '.tabs button').length === 3, String(qa(w, '.tabs button').length));
+  check('精华错题计数为 1', /精华错题（1）/.test(text(w, '#tabEss')), text(w, '#tabEss'));
+
+  click(q(w, '#tabEss'));
+  await tick();
+  check('精华错题列表 1 条', qa(w, '#list .list-item').length === 1,
+    String(qa(w, '#list .list-item').length));
+  check('精华题可跨分区解析题干', text(w, '#list .list-item .lt').length > 4);
+
+  click(q(w, '#practiceBtn'));
+  await tick();
+  const sess = JSON.parse(w.localStorage.getItem('qz.ess.session.v1') || 'null');
+  check('精华重刷写入精华会话', !!sess && sess.scope === 'ess' && sess.set === 'ess');
+  check('精华重刷会切到精华分区', JSON.parse(w.localStorage.getItem('qz.settings.v1') || '{}').set === 'ess');
+  check('精华重刷不污染默认会话键', w.localStorage.getItem('qz.session.v1') === null);
+}
+
 console.log('\n页面脚本运行时错误：' + (jsErrors.length ? jsErrors.join(' | ') : '无'));
 check('无未捕获的脚本错误', jsErrors.length === 0, jsErrors.join(' | '));
 

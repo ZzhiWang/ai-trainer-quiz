@@ -47,6 +47,7 @@
   function newSession(filters) {
     var ids = Bank.build(filters);
     if (!ids.length) return null;
+    var isEss = Bank.setKey() === 'ess';
     return {
       ids: ids,
       idx: 0,
@@ -55,9 +56,17 @@
       optOrder: {},
       mode: filters.mode,
       filters: { levels: filters.levels, types: filters.types, secs: filters.secs || [] },
+      set: Bank.setKey(),
+      scope: isEss ? 'ess' : '',
       startedAt: Date.now(),
       finished: false
     };
+  }
+
+  /* 当前分区的会话读写：精华题用自己的键，其余沿用旧键（老数据完全不受影响） */
+  function saveSession() {
+    if (session && session.scope === 'ess') Store.saveEssSession(session);
+    else Store.saveSession(session);
   }
 
   function curQ() {
@@ -186,14 +195,14 @@
       now.sort();
       session.picks[q.id] = now.length ? now : null;
       if (!now.length) delete session.picks[q.id];
-      Store.saveSession(session);
+      saveSession();
       render();
       return;
     }
 
     if (!settings.instant) {
       session.picks[q.id] = [key];
-      Store.saveSession(session);
+      saveSession();
       render();
       return;
     }
@@ -211,10 +220,10 @@
     session.picks[q.id] = pick.slice().sort();
     session.graded[q.id] = true;
     var ok = UI.isCorrect(q, pick);
-    Store.record(q.id, ok);
+    Store.record(q.id, ok, session.scope === 'ess' ? 'ess' : '');
     gradedThisSession += 1;
     if (ok) correctThisSession += 1;
-    Store.saveSession(session);
+    saveSession();
     render();
     renderGrid();
   }
@@ -225,14 +234,14 @@
     if (next < 0) return;
     if (next >= session.ids.length) { finish(); return; }
     session.idx = next;
-    Store.saveSession(session);
+    saveSession();
     render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function jump(i) {
     session.idx = i;
-    Store.saveSession(session);
+    saveSession();
     closeSheet();
     render();
     window.scrollTo({ top: 0 });
@@ -260,7 +269,7 @@
   /* ---------------------------------------------------------------- 结束 */
   function finish() {
     session.finished = true;
-    Store.saveSession(session);
+    saveSession();
     clearInterval(timerId);
 
     var total = session.ids.length;
@@ -307,7 +316,7 @@
         ids: ids, idx: 0, picks: {}, graded: {}, optOrder: {}, mode: 'wrong',
         filters: session.filters, startedAt: Date.now(), finished: false
       };
-      Store.saveSession(session);
+      saveSession();
       restartView();
     };
 
@@ -316,7 +325,7 @@
         ids: session.ids.slice(), idx: 0, picks: {}, graded: {}, optOrder: {}, mode: session.mode,
         filters: session.filters, startedAt: Date.now(), finished: false
       };
-      Store.saveSession(session);
+      saveSession();
       restartView();
     };
   }
@@ -404,19 +413,49 @@
     UI.bindThemeToggle();
     settings = Store.settings();
 
+    /* 找出属于当前分区的未完成练习：精华题用 qz.ess.session.v1，其余沿用 qz.session.v1 */
+    function pendingSession() {
+      var k = Bank.setKey();
+      var cands = [];
+      var e = Store.essSession();
+      var s = Store.session();
+      if (e && !e.finished) cands.push(e);
+      if (s && !s.finished) cands.push(s);
+      if (!cands.length) return null;
+      // 优先当前分区的会话，其次取最近开始的那个（错题本/收藏夹可能从别的分区跳进来）
+      var same = cands.filter(function (x) { return (x.set || '') === k; });
+      if (same.length) return same[0];
+      cands.sort(function (a, b) { return (b.startedAt || 0) - (a.startedAt || 0); });
+      return cands[0];
+    }
+
     Bank.load().then(function () {
       var hasParams = !!(UI.qs('mode') || UI.qs('type') || UI.qs('lv') || UI.qs('count'));
-      var saved = Store.session();
-      if (saved && !saved.finished) {
+      var saved = pendingSession();
+      if (saved) {
         session = saved;
-      } else if (hasParams) {
-        session = newSession(parseFilters());
-      } else {
-        // 没有参数也没有未完成的练习，回首页去选
-        location.href = 'index.html';
+        // 会话可能属于另一个分区，切过去再继续
+        if (session.set !== undefined && session.set !== Bank.setKey()) {
+          return Bank.useSet(session.set).then(resume);
+        }
+        resume();
         return;
       }
+      if (hasParams) {
+        session = newSession(parseFilters());
+        after();
+        return;
+      }
+      // 没有参数也没有未完成的练习，回首页去选
+      location.href = 'index.html';
+    }).catch(function (err) {
+      UI.toast(err.message);
+      el.stem.textContent = '题库加载失败：' + err.message;
+    });
 
+    function resume() { after(); }
+
+    function after() {
       if (!session || !session.ids || !session.ids.length) {
         UI.toast('没有可练习的题目');
         setTimeout(function () { location.href = 'index.html'; }, 1200);
@@ -432,10 +471,7 @@
       bind();
       render();
       startTimer();
-    }).catch(function (err) {
-      UI.toast(err.message);
-      el.stem.textContent = '题库加载失败：' + err.message;
-    });
+    }
   }
 
   function modeTitle(s) {
