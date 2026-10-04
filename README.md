@@ -5,6 +5,8 @@
 
 ![题型](https://img.shields.io/badge/题量-2246-blue) ![章节](https://img.shields.io/badge/章节-15个-orange) ![部署](https://img.shields.io/badge/部署-GitHub%20Pages-brightgreen) ![依赖](https://img.shields.io/badge/依赖-零构建-lightgrey)
 
+> 题库的历次改动与复核记录见 [更新说明.md](更新说明.md)。
+
 ## 功能
 
 - **题库分区**：等级认定题库（三级/四级，2246 题）｜大赛理论题库（第九届公开题库，4423 题）｜精华题（1000 题）。默认仍是等级认定题库，原有进度与统计不受影响
@@ -56,14 +58,20 @@ python3 -m http.server 8000
 ### 题库构建脚本
 
 ```bash
-python3 tools/build_bank.py      # 生成 data/questions.json（等级认定题库）
-python3 tools/build_n9.py        # 生成 data/questions-n9.json（第九届大赛题库）
+python3 tools/build_all.py            # 一键重建等级认定题库（推荐，顺序固定、幂等）
+python3 tools/build_all.py --with-n9  # 连大赛题库一起重建
+python3 tools/build_bank.py      # 只生成 data/questions.json 基础版（⚠ 会丢掉后续步骤的解析）
+python3 tools/build_n9.py        # 只生成 data/questions-n9.json 基础版
 python3 tools/build_essence.py   # 生成 data/essence.json（1000 题精华清单）
+python3 tools/fill_exp_lv.py     # 把 tools/gen_lv/*.jsonl 的 AI 解析合并进等级认定题库
 python3 tools/fill_exp.py        # 把 tools/gen/*.jsonl 里的 AI 解析合并进大赛题库
+python3 tools/apply_fix.py       # 用 tools/fix/*.jsonl 覆写答案/题干/解析（人工裁定结果）
 node tools/selftest.mjs          # 逻辑自测
 node tools/domtest.mjs           # 真实 DOM 测试（需 jsdom）
 ```
 
+> `data/questions.json` 需要「构建 → 补解析 → 应用修正」三步，单独跑 `tools/build_bank.py` 会丢解析，请用 `tools/build_all.py`。
+> `build_all.py` 会在重建后校验是否丢失解析，异常时报警并非零退出。
 > 大赛题库的解析由 AI 逐批生成，脚本幂等可续跑；覆盖进度见 `data/questions-n9.json` 的 `meta.explained`。
 
 ## 部署到 GitHub Pages
@@ -184,14 +192,23 @@ git push -u origin main
 
 ```bash
 python3 tools/extract_outline.py  # 从官方细目表抽取章节结构（macOS textutil，产物已提交）
-python3 tools/build_bank.py       # 解析 题库/*.docx + 第三方答案 + 章节 → data/questions.json
 python3 tools/make_overrides.py   # 生成/合并答案裁定表（读 report_conflicts.json）
-python3 tools/build_bank.py       # 再跑一遍，应用裁定结果
+python3 tools/build_all.py        # 构建 → 补解析 → 应用修正（一步到位，可重复运行）
 python3 tools/selftest.mjs        # 逻辑自测（52 项）
 node tools/domtest.mjs            # 页面交互自测（64 项，需先 npm i jsdom --prefix /tmp/domtest）
 ```
 
 只依赖 Python 标准库，不需要 pip 安装任何东西。`make_overrides.py` 会与已有裁定合并，重复执行不会丢结果。
+
+**⚠ 不要单独运行 `python3 tools/build_bank.py`**：它只产出题库基础版，还会覆盖掉
+`tools/gen_lv/*.jsonl`（AI 补的解析）和 `tools/fix/*.jsonl`（人工裁定）的内容。
+需要重建时统一用 `python3 tools/build_all.py`。
+
+人工/AI 裁定的修正项写在 `tools/fix/*.jsonl`，每行一个 JSON，可改答案、题干、解析等：
+
+```json
+{"id":"L4-S-1217","type":"single","ans":"D","stem":"……","exp":"……","src":"reviewed","note":"……"}
+```
 
 ## 关于其他题库
 

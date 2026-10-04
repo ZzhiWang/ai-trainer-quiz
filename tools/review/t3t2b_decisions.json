@@ -1,0 +1,214 @@
+{
+ "A": {
+  "decision": "不动，保持题库答案",
+  "ids": [
+   "L3-J-0019",
+   "L3-J-0183",
+   "L4-J-1094"
+  ],
+  "reason": "题库+flash 与 GPT+v4-pro 各2票平票，题干瑕疵型争议，按“题目不变”原则不改"
+ },
+ "B": {
+  "decision": "不改",
+  "ids": [
+   "L3-J-0015",
+   "L3-J-0137",
+   "L3-M-0625",
+   "L3-M-0655",
+   "L3-M-0674",
+   "L3-M-0692",
+   "L3-M-0696",
+   "L3-M-0705",
+   "L3-M-0735",
+   "L3-M-0760",
+   "L3-M-0764",
+   "L3-M-0787",
+   "L3-M-0795",
+   "L3-M-0829",
+   "L3-M-0859",
+   "L3-M-0889",
+   "L3-M-0890",
+   "L3-M-2092",
+   "L3-M-2183",
+   "L3-M-2201",
+   "L3-M-2227",
+   "L4-J-1129"
+  ],
+  "reason": "题库+v4-pro+flash 三方答案完全一致，仅 GPT 主张改（孤证），判为 GPT 误报"
+ },
+ "C": {
+  "decision": "全部10条已确认完毕（2026-10-05）",
+  "ids": [
+   "L3-M-0619",
+   "L3-M-0669",
+   "L3-M-0744",
+   "L3-M-0798",
+   "L3-M-0831",
+   "L3-M-0858",
+   "L3-M-0887",
+   "L3-M-2144",
+   "L3-M-2161",
+   "L3-M-2211"
+  ],
+  "confirmed": {
+   "L3-M-0744": {
+    "from": "BDE",
+    "to": "D",
+    "by": "user-batch1",
+    "exp": "rewritten"
+   },
+   "L3-M-0798": {
+    "from": "CE",
+    "to": "BCE",
+    "by": "user-batch1",
+    "exp": "rewritten"
+   },
+   "L3-M-0887": {
+    "from": "ABCE",
+    "to": "ABC",
+    "by": "user-batch1",
+    "exp": "rewritten"
+   },
+   "L3-M-2144": {
+    "from": "BC",
+    "to": "AC",
+    "by": "user-batch1",
+    "exp": "rewritten"
+   },
+   "L3-M-0669": {
+    "from": "BCDE",
+    "to": "BCD",
+    "by": "user-batch1",
+    "exp": "rewritten"
+   },
+   "L3-M-0831": {
+    "from": "ABC",
+    "to": "ABCD",
+    "by": "user-batch2",
+    "exp": "rewritten"
+   },
+   "L3-M-2161": {
+    "from": "BD",
+    "to": "BCD",
+    "by": "user-batch2",
+    "exp": "rewritten"
+   },
+   "L3-M-0619": {
+    "from": "AE",
+    "to": "AE",
+    "by": "user-batch2",
+    "exp": "kept"
+   },
+   "L3-M-0858": {
+    "from": "ABCE",
+    "to": "ABCE",
+    "by": "user-batch2",
+    "exp": "kept"
+   },
+   "L3-M-2211": {
+    "from": "ABC",
+    "to": "ABC",
+    "by": "user-batch2",
+    "exp": "kept"
+   }
+  }
+ },
+ "applied": {
+  "file": "tools/fix/question_fix_002.jsonl",
+  "count": 7,
+  "ids": [
+   "L3-M-0669",
+   "L3-M-0744",
+   "L3-M-0798",
+   "L3-M-0831",
+   "L3-M-0887",
+   "L3-M-2144",
+   "L3-M-2161"
+  ]
+ },
+ "T1_add": {
+  "note": "T1「加选项」19条：v4-pro 三次独立盲答抽验（关键集采样 + t1add1 + t1add2），三次自洽 15/19",
+  "changed": {
+   "L3-M-0874": "ABC→ABCE",
+   "L3-M-0894": "ABC→ABCD",
+   "L3-M-2158": "AD→ABCD",
+   "L3-M-2153": "BD→ABD",
+   "L3-M-2103": "ACD→ABCD",
+   "L3-M-2141": "ACD→ABCD",
+   "L3-M-2180": "AC→ABC",
+   "L3-M-2172": "ABC→ABCD",
+   "L3-M-2239": "AB→ABC",
+   "L3-M-2090": "ABC→ABCD",
+   "L3-M-2152": "AB→ABC",
+   "L3-M-2226": "BC→ABC",
+   "L3-M-2230": "BC→ABC"
+  },
+  "kept": {
+   "L3-M-2091": "ABC",
+   "L3-M-2155": "ACD",
+   "L3-M-2149": "BC"
+  },
+  "pending": {},
+  "applied": "tools/fix/question_fix_003.jsonl（13条，答案+解析同步重写）",
+  "resolved": {
+   "L3-M-0652": {
+    "ans": "ABCDE",
+    "exp": "keep(本就含D)",
+    "by": "user"
+   },
+   "L3-M-0693": {
+    "ans": "CDE(保持)",
+    "exp": "rewrite(排除A)",
+    "by": "user"
+   },
+   "L3-M-0754": {
+    "ans": "ACE(保持)",
+    "exp": "rewrite(排除D)",
+    "by": "user"
+   }
+  }
+ },
+ "T1_rest": {
+  "changed_ans_only": [
+   "L3-M-0641",
+   "L3-M-0665",
+   "L3-S-0308",
+   "L3-S-0361",
+   "L3-S-0437",
+   "L3-S-0591",
+   "L3-S-2006",
+   "L4-S-1439",
+   "L4-S-1615"
+  ],
+  "changed_ans_exp": [
+   "L3-J-0058",
+   "L3-M-0737",
+   "L3-M-2135",
+   "L3-M-2174",
+   "L3-M-2238",
+   "L3-M-2224",
+   "L3-M-0828",
+   "L3-S-1713",
+   "L3-S-1917",
+   "L4-S-1421",
+   "L4-S-1468",
+   "L3-S-1656",
+   "L3-S-1769"
+  ],
+  "resolved": {
+   "L3-M-0783": {
+    "ans": "ABCDE→ABD",
+    "exp": "keep(本就自洽)"
+   },
+   "L3-M-2173": {
+    "ans": "ABC(保持)",
+    "exp": "rewrite(标明题干有误、三项最佳值为1)"
+   }
+  },
+  "applied": [
+   "tools/fix/question_fix_005.jsonl(22条)",
+   "tools/fix/question_fix_006.jsonl(2条)"
+  ]
+ },
+ "status": "T1 全部43条已结清（加选项19条：改14/保持5；其余24条：改22/单列2已定）"
+}

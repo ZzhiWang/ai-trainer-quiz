@@ -1,0 +1,306 @@
+[
+ {
+  "id": "L3-M-0652",
+  "bank": "ABCE",
+  "gpt": "ABCDE",
+  "proA": "ABCDE",
+  "proB": "ABCDE",
+  "proC": "ABCE",
+  "flash": "ABCE",
+  "stem": "（　　）是云服务和工具的优势。",
+  "gpt_conf": "low",
+  "pro_conf": [
+   "high",
+   "medium",
+   "medium"
+  ]
+ },
+ {
+  "id": "L3-M-0693",
+  "bank": "CDE",
+  "gpt": "ACDE",
+  "proA": "ACDE",
+  "proB": "CDE",
+  "proC": "ACDE",
+  "flash": "CDE",
+  "stem": "在业务数据采集中，需要重点关注（　　）。",
+  "gpt_conf": "high",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-0754",
+  "bank": "ACE",
+  "gpt": "ACDE",
+  "proA": "ACDE",
+  "proB": "ACE",
+  "proC": "ACE",
+  "flash": "ACE",
+  "stem": "在深度学习项目中，数据标注可能涉及的任务有（　　）。",
+  "gpt_conf": "high",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-0874",
+  "bank": "ABC",
+  "gpt": "ABCE",
+  "proA": "ABCE",
+  "proB": "ABCE",
+  "proC": "ABCE",
+  "flash": "ABCE",
+  "stem": "在使用情境的分析工具时，需要考虑的因素有（　　）。",
+  "gpt_conf": "high",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-0894",
+  "bank": "ABC",
+  "gpt": "ABCD",
+  "proA": "ABCD",
+  "proB": "ABCD",
+  "proC": "ABCD",
+  "flash": "ABCD",
+  "stem": "在数据处理过程中，（　　）步骤可能会导致数据丢失或错误。",
+  "gpt_conf": "high",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2090",
+  "bank": "ABC",
+  "gpt": "ABCD",
+  "proA": "ABCD",
+  "proB": "ABCD",
+  "proC": "ABCD",
+  "flash": "ABCD",
+  "stem": "常见的数据采集工具有哪些（　　）。",
+  "gpt_conf": "high",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2091",
+  "bank": "ABC",
+  "gpt": "ABCD",
+  "proA": "ABCD",
+  "proB": "ABCD",
+  "proC": "ABCD",
+  "flash": "ABCD",
+  "stem": "以下哪些数据采集方法可以用于社会调查（　　）。",
+  "gpt_conf": "high",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2103",
+  "bank": "ACD",
+  "gpt": "ABCD",
+  "proA": "ABCD",
+  "proB": "ABCD",
+  "proC": "ABCD",
+  "flash": "ABD",
+  "stem": "主要影响信息安全的方面包括（　　）。",
+  "gpt_conf": "high",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2141",
+  "bank": "ACD",
+  "gpt": "ABCD",
+  "proA": "ABCD",
+  "proB": "ABCD",
+  "proC": "ABCD",
+  "flash": "ABCD",
+  "stem": "人工智能数据采集中，常用的数据存储格式有哪些（　　）。",
+  "gpt_conf": "high",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2149",
+  "bank": "BC",
+  "gpt": "ABCDE",
+  "proA": "ABCDE",
+  "proB": "ABCDE",
+  "proC": "ABCDE",
+  "flash": "ACDE",
+  "stem": "数据规约是一种数据预处理技术，常见的方法包括（　　）。",
+  "gpt_conf": "low",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2152",
+  "bank": "AB",
+  "gpt": "ABC",
+  "proA": "ABC",
+  "proB": "ABC",
+  "proC": "ABC",
+  "flash": "ABC",
+  "stem": "对人脸数据进行标注通常包括（　　）。",
+  "gpt_conf": "high",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2153",
+  "bank": "BD",
+  "gpt": "ABD",
+  "proA": "ABD",
+  "proB": "ABD",
+  "proC": "ABD",
+  "flash": "ABD",
+  "stem": "常用的文件扩展名，用于存储图像数据的标注结果，其中包括（　　）。",
+  "gpt_conf": "high",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2155",
+  "bank": "ACD",
+  "gpt": "ABCD",
+  "proA": "ABCD",
+  "proB": "ACD",
+  "proC": "ABCD",
+  "flash": "ABCD",
+  "stem": "下列选项中，（　　）是导致数据不完整的原因。",
+  "gpt_conf": "low",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2158",
+  "bank": "AD",
+  "gpt": "ABCD",
+  "proA": "ABCD",
+  "proB": "ABCD",
+  "proC": "ABCD",
+  "flash": "ABCD",
+  "stem": "人工智能的研究和应用是跨学科的，下面哪一项可以与人工智能相结合（　　）。",
+  "gpt_conf": "high",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2172",
+  "bank": "ABC",
+  "gpt": "ABCD",
+  "proA": "ABCD",
+  "proB": "ABCD",
+  "proC": "ABCD",
+  "flash": "ABCD",
+  "stem": "常见的算法模型测试方法包括（　　）。",
+  "gpt_conf": "high",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2180",
+  "bank": "AC",
+  "gpt": "ABC",
+  "proA": "ABC",
+  "proB": "ABC",
+  "proC": "ABC",
+  "flash": "ABC",
+  "stem": "在进行机器学习时，通常需要对收集到的数据集进行分割，这个过程被称为数据集划分，即将原始数据集分为（　　）。",
+  "gpt_conf": "high",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2226",
+  "bank": "BC",
+  "gpt": "ABC",
+  "proA": "ABC",
+  "proB": "ABC",
+  "proC": "ABC",
+  "flash": "ABC",
+  "stem": "在AI系统运维中，以下哪种方式可以有效降低系统崩溃的风险（　　）。",
+  "gpt_conf": "low",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2230",
+  "bank": "BC",
+  "gpt": "ABC",
+  "proA": "ABC",
+  "proB": "ABC",
+  "proC": "ABC",
+  "flash": "ABC",
+  "stem": "在AI系统运维中，下面哪种方式是常见的扩容方式（　　）。",
+  "gpt_conf": "low",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ },
+ {
+  "id": "L3-M-2239",
+  "bank": "AB",
+  "gpt": "ABC",
+  "proA": "ABC",
+  "proB": "ABC",
+  "proC": "ABC",
+  "flash": "ABC",
+  "stem": "语音特征提取的过程包含（　　）步骤。",
+  "gpt_conf": "low",
+  "pro_conf": [
+   "high",
+   "high",
+   "high"
+  ]
+ }
+]

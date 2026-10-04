@@ -1,0 +1,1 @@
+{"id": "L3-S-0329", "stem": "在Excel中，（　　）可以快速切换不同的工作簿。", "exp": "Ctrl+Shift+Tab（与Ctrl+Tab对应）可在已打开的多个工作簿窗口之间快速切换；Ctrl+PageUp、Ctrl+PageDown切换的是同一工作簿内的工作表，鼠标点击工作表目录也只在工作表间定位，三者均不能切换工作簿，故答案选D。", "src": "reviewed", "note": "audit失败单条人工裁定：原题干为否定式“不可以”，但A、B两项（Ctrl+PageUp/PageDown）事实上都不能切换工作簿，否定式下有两个正确选项；改为肯定式“可以”后仅D成立，答案保持D，解析同步重写"}

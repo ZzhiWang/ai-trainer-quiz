@@ -72,8 +72,8 @@ const single = Bank.filter({ types: ['single'] });
 const l3single = Bank.filter({ levels: [3], types: ['single'] });
 check('三级 ' + l3.length + ' 题', l3.every((q) => q.lv === 3) && l3.length === 1496);
 check('四级 ' + l4.length + ' 题', l4.every((q) => q.lv === 4) && l4.length === 750);
-check('只刷单选题 ' + single.length + ' 题', single.every((q) => q.type === 'single') && single.length === 1238);
-check('三级单选 ' + l3single.length + ' 题', l3single.every((q) => q.lv === 3 && q.type === 'single') && l3single.length === 738);
+check('只刷单选题 ' + single.length + ' 题', single.every((q) => q.type === 'single') && single.length === 1237);
+check('三级单选 ' + l3single.length + ' 题', l3single.every((q) => q.lv === 3 && q.type === 'single') && l3single.length === 737);
 check('三级+四级相加 = 总数', l3.length + l4.length === qs.length);
 
 console.log('\n[2b] 章节');

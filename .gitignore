@@ -18,3 +18,8 @@ tools/sources/ai_trainer_l3_answers_xxiao.xlsx
 tools/sources/n9_raw_questions.json
 tools/gen/
 tools/gen_lv/
+
+# 复核过程的大体积原始产物：只在本地保留（结论与判定记录仍随仓库提交）
+题库复核材料/题库_全库2246题.*
+tools/review/ai_blind_all.json
+tools/review/review_bank.jsonl

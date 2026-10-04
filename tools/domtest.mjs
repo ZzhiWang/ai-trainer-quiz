@@ -124,7 +124,7 @@ console.log('\n[首页 index.html]');
   click(typeChips[2]); // 取消多选题
   await tick();
   check('只勾选单选题后，按钮仍是 20 题', /开始刷题（20 题）/.test(text(w, '#startBtn')), text(w, '#startBtn'));
-  check('池子提示显示筛选后的题量', /1238/.test(text(w, '#poolHint')), text(w, '#poolHint'));
+  check('池子提示显示筛选后的题量', /1237/.test(text(w, '#poolHint')), text(w, '#poolHint'));
 
   click(q(w, '#startBtn'));
   await tick();
